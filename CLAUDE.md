@@ -8,7 +8,7 @@ em dois modos: **Espera** (só avança ao acertar) e **Play-along** (no andament
 
 ## Estado atual
 
-Marco atual: **M1 — afinador pronto; aguardando validação no iPhone**. No ar: https://jvrotta.github.io/GuitarThrow/
+Marco atual: **M1 — afinador redesenhado; aguardando aprovação no iPhone**. No ar: https://jvrotta.github.io/GuitarThrow/
 
 ## Mapa — "preciso de X → abro Y"
 

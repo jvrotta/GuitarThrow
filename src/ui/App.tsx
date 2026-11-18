@@ -1,32 +1,33 @@
 import { useState } from 'preact/hooks';
+import { Home } from './Home';
 import { Tuner } from './Tuner';
+import { usePitch } from './usePitch';
 
 type Screen = 'home' | 'tuner';
 
-const MENU: { title: string; hint: string; screen?: Screen }[] = [
-  { title: 'Afinador', hint: 'Afine e teste o microfone', screen: 'tuner' },
-  { title: 'Praticar', hint: 'Em breve (M3)' },
-  { title: 'Músicas', hint: 'Em breve (M6)' },
-];
-
 export function App() {
+  // The mic session lives here so it can be started inside the very tap that opens a screen
+  // (iOS only allows audio to start from a user gesture) — no extra "activate" step.
+  const pitch = usePitch();
   const [screen, setScreen] = useState<Screen>('home');
-  if (screen === 'tuner') return <Tuner onBack={() => setScreen('home')} />;
 
+  if (screen === 'tuner') {
+    return (
+      <Tuner
+        p={pitch}
+        onBack={() => {
+          pitch.stop();
+          setScreen('home');
+        }}
+      />
+    );
+  }
   return (
-    <main class="home">
-      <h1>GuitarThrow</h1>
-      <ul class="menu">
-        {MENU.map((m) => (
-          <li key={m.title}>
-            <button disabled={!m.screen} onClick={() => m.screen && setScreen(m.screen)}>
-              <strong>{m.title}</strong>
-              <span>{m.hint}</span>
-            </button>
-          </li>
-        ))}
-      </ul>
-      <footer>versão {__BUILD_ID__}</footer>
-    </main>
+    <Home
+      onTuner={() => {
+        pitch.start();
+        setScreen('tuner');
+      }}
+    />
   );
 }

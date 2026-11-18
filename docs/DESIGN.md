@@ -77,6 +77,7 @@ Cada marco é pequeno, testável no celular e útil sozinho. O afinador vem prim
 
 | Repositório | **Git**, com navegação por `CLAUDE.md` (mapa) → `docs/ROADMAP.md` → `index.ts` de cada módulo | Nenhuma tarefa precisa ler o repo inteiro nem o histórico do chat. Comandos `/proximo`, `/fechar`, `/musica`, `/bug`. |
 | Hospedagem | **Repositório público + GitHub Pages**, deploy por GitHub Actions a cada push na `main` | URL `https://<usuario>.github.io/<repo>/`; o `base` do Vite vem do nome do repo no workflow. **Settings → Pages → Source tem que ser "GitHub Actions"**: em "Deploy from a branch" o deploy da branch roda depois e publica os fontes crus (página em branco). |
+| Afinador (feedback do 1º teste no iPhone) | **Cordas em destaque** (6 linhas, Mi agudo em cima como na tab), corda **automática + trava** ao tocar nela, medida em cents **contra a corda solta** (com dobra de oitava), ✓ por corda afinada; mic liga no toque que abre a tela; debug em painel sobreposto | Padrão de UX para as próximas telas: zero passos extras, pouco texto, alvos de toque ≥ 44 px, layouts próprios para retrato e paisagem. |
 | Padrões assumidos | Interface em pt-BR e código em inglês; dados só no aparelho (sem login); tema escuro; Play-along começa só com metrônomo (som de referência sintetizado avaliado no M5) | Pode ser revisto a qualquer momento. |
 
 ### Dependências e motivo
