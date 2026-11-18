@@ -4,6 +4,8 @@
 
 ## Próximo passo
 
+0. **Usuário**: GitHub → repo → Settings → Pages → Source = **GitHub Actions** (hoje está "Deploy from a branch",
+   que publica os fontes crus por cima do build). Depois, um novo push republica.
 1. **Usuário — validar o M1 no iPhone** (https://jvrotta.github.io/GuitarThrow/, instalado na Tela de Início):
    - Afinador → Ativar microfone → tocar cada corda solta (6ª a 1ª), uma por vez.
    - Abrir "Debug" e anotar: frames/s, latência base, linha "Eco / ruído / ganho" e se a nota fica estável.
