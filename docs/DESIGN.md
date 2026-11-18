@@ -80,6 +80,11 @@ Cada marco é pequeno, testável no celular e útil sozinho. O afinador vem prim
 | Afinador (2º feedback, referência de app de afinador com cabeça do violão) | **Cabeça do violão 3+3** (Ré/Lá/Mi à esquerda, Sol/Si/Mi à direita, como visto de frente): a tarraxa, a corda e o rótulo da corda tocada acendem; **medidor com ponteiro vertical** e ♭/♯; texto "Aperte/Afrouxe". Mantidos: auto + trava (toque no rótulo; chip "Auto" destrava), cents contra a corda solta, ✓ por corda, mic no toque. Visual próprio (SVG desenhado aqui), sem copiar o app de referência. | Padrão de UX para as próximas telas: zero passos extras, pouco texto, alvos de toque ≥ 44 px, layouts próprios para retrato e paisagem. |
 | Detecção no modo Espera (M3, revisada 2026-11-18) | Juiz **espectral sobre o som novo** (depois − antes de cada ataque): harmônicos destacados, energia explicada − não explicada, afinação estável. O detector de altura (pitchy) ficou só no afinador. Detalhes em §9. | 1ª versão (energia nos harmônicos do alvo + pitchy) aceitava quinta/oitava e transformava batidas e fala em notas (relato do usuário; reproduzido em 8/16 cenários realistas). FFT própria (sem dependência nova). Base para acordes no M4. |
 | Worklet do microfone | `public/capture.worklet.js`, carregado por `BASE_URL` | Em `npm run dev` o Vite injetava código de hot-reload no worklet e o microfone falhava ("node name 'capture' is not defined"). |
+| Acordes no modo Espera (M4, 2026-11-18) | Mesmo juiz espectral: cada nota do acorde precisa mostrar **harmônicos próprios** (que nenhuma outra nota do acorde tem, até 5 kHz, tolerância 25 cents); até 3 notas verificáveis → todas, mais que isso → todas menos uma; juntas explicam ≥ 50 % do som novo acima do acaso, por 3 quadros. Oitavas dobradas não são verificáveis (só contam pela vizinha). | Sem chroma (o plano antigo): o chroma confundia acordes com notas em comum. Acorde incompleto → "Faltou Dó no Am". |
+| Play-along (M5, 2026-11-18) | O juiz recebe **todos os eventos pendentes perto do cursor** (`setTargets`); o horário do **ataque** (relógio do analisador → relógio da página pelo menor atraso visto − latência calibrada) vira posição em batidas; Perfeito ≤ 80 ms, Bom ≤ 160 ms, fora disso "adiantado/atrasado"; a nota vira erro quando a janela + 0,45 s de decisão passam. | O tempo é medido no ataque, não quando o juiz decide (~0,3 s depois). Teste de integração com áudio sintético: erro de medição < 40 ms. |
+| Metrônomo e calibração | Clique = rajada curta de ruído filtrado no **mesmo AudioContext do microfone**, agendado ~120 ms à frente e adiantado pelo `outputLatency`. Sem altura definida, o juiz ignora o clique que o microfone ouve. Calibração: 4 + 8 cliques, o usuário toca qualquer corda solta junto; mediana de (ataque − batida) = latência salva. | Contagem sempre com clique; no Play-along o clique segue na música (ajuste). Espera: clique só na contagem. |
+| Persistência (M6) | IndexedDB (chave-valor, fallback em memória): ajustes, melhor resultado por música e modo (estrelas → velocidade → precisão), última música (botão "Continuar"), músicas importadas. | Nada sai do aparelho. |
+| Importação (M6) | Tab em texto: parser próprio (blocos de 6 linhas, coluna = colcheia, espaço largo = nota longa). Guitar Pro / MusicXML: **alphaTab em runtime, só por `import()` dinâmico** na tela Importar; fora do precache do PWA (cache na 1ª importação). Notas sem corda/traste → 1ª posição. | Bundle inicial continua ~33 KB gzip; o alphaTab (~320 KB gzip) só baixa ao importar um arquivo. |
 | Padrões assumidos | Interface em pt-BR e código em inglês; dados só no aparelho (sem login); tema escuro; Play-along começa só com metrônomo (som de referência sintetizado avaliado no M5) | Pode ser revisto a qualquer momento. |
 
 ### Dependências e motivo
@@ -90,7 +95,7 @@ Cada marco é pequeno, testável no celular e útil sozinho. O afinador vem prim
 | `vite`, `@preact/preset-vite`, `typescript` | Build e dev server |
 | `vite-plugin-pwa` | Gera manifest e service worker com precache dos assets com hash (offline) |
 | `vitest` | Testes com a mesma config do Vite |
-| `@coderline/alphatab` (dev) | Só no build: lê alphaTex (e, no M6, Guitar Pro/MusicXML sob demanda). Não entra no bundle. Armadilhas: `note.string` 1 = corda **mais grave**; `beat.playbackStart` é **relativo ao compasso** (somar `masterBar.start`); 960 ticks por semínima. Tudo isso fica isolado em `src/music/alphatab.ts`. |
+| `@coderline/alphatab` | No build lê alphaTex; no app, só via `import()` dinâmico na importação de Guitar Pro/MusicXML (chunk separado, fora do precache). Por isso saiu de devDependencies (M6). Armadilhas: `note.string` 1 = corda **mais grave**; `beat.playbackStart` é **relativo ao compasso** (somar `masterBar.start`); 960 ticks por semínima. Tudo isso fica isolado em `src/music/alphatab.ts`. |
 | `pitchy` | Detecção de pitch MPM (McLeod) com autocorrelação via FFT; pequeno, sem dependências. Obs.: o `clarityThreshold` dele é o *k* do MPM, não um limiar de rejeição — a rejeição é nossa (`minClarity`). |
 
 ### Parâmetros do analisador (M1, `src/audio/analyzer.ts`)
@@ -129,12 +134,14 @@ Conceitos usados (visual próprio, sem copiar o app de referência):
 - Rodapé: pausa · **barra da música inteira** (mini-mapa das notas, parte tocada colorida pelo resultado; tocar/arrastar = ir ao ponto).
 - Início com contagem de 1 compasso; fim com **resumo**: precisão %, 1–3 estrelas, melhor sequência, botões repetir / mais lento / mais rápido.
 
-**Motor (`src/engine`, sem UI)** — `PracticeSession(song, mode, speed)`
+**Motor (`src/engine`, sem UI)** — base `Session` (contagem, combo, precisão, seek, loop A–B) + `WaitSession` / `PlayAlongSession`
 - Estado por evento: `pending | hit | miss` (+ `timing: perfect | good` no Play-along); alvo atual; combo; melhor combo.
 - Entrada: `NotePlayed { time, midi }` vinda do áudio (ataque detectado + pitch estável).
 - **Espera**: alvo = primeiro evento pendente. Nota certa → `hit`, avança. Nota errada → conta erro do alvo, zera combo,
   mostra o que foi tocado; **nunca avança sem acerto**. Precisão = alvos acertados na 1ª tentativa / total.
-- **Play-along (M5)**: relógio corre; janela ±80 ms = Perfeito, ±160 ms = Bom, senão `miss` quando a janela passa.
+- **Play-along (M5, implementado)**: relógio corre; janela ±80 ms = Perfeito, ±160 ms = Bom; nota certa fora da janela =
+  "adiantado/atrasado"; `miss` quando a janela + o tempo de decisão do juiz passam. Ver §7.
+- **Loop A–B**: botão no rodapé marca o início no compasso atual, depois o fim; cada volta recomeça com contagem.
 - Estrelas: ≥ 60% = 1, ≥ 80% = 2, ≥ 95% = 3.
 
 **Dedo por nota**: `NoteRef.finger` (0–4). Vem da digitação anotada no alphaTex (`{lf 2}` = indicador; `lf 1` é o polegar); sem anotação, deduz:

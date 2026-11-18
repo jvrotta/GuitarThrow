@@ -1,4 +1,4 @@
-import type { EventStatus } from '../../engine';
+import type { EventStatus, Loop } from '../../engine';
 
 /** Colors read once from the CSS tokens on :root. */
 export interface TabTheme {
@@ -52,6 +52,8 @@ export interface TabFrame {
   /** Count-in number to show at the cursor. */
   countIn?: number;
   popups?: readonly Popup[];
+  /** A–B loop region to shade. */
+  loop?: Loop | null;
 }
 
 export const LABEL_W = 42;

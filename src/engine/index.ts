@@ -1,9 +1,11 @@
 /**
- * engine — practice logic, independent of UI.
+ * engine — practice logic, independent of UI. Pure: time is pushed in with tick(dt).
  * Transport: musical clock in beats (play/pause/seek/speed, injectable time source).
- * PracticeSession (practice.ts): Wait mode — 1-bar count-in, clock holds on the target until it is played
- * right (no note skipped), per-event hit/miss, combo, first-try accuracy, stars, seek/restart.
- * Planned: chord matching by chroma (M4), Play-along timing windows (M5).
+ * session.ts: Session base — per-event status, combo, accuracy, count-in, seek/restart, A–B loop; starsFor.
+ * practice.ts: WaitSession — clock holds on the target until the judge says hit (no note skipped); wrong never advances.
+ * playalong.ts: PlayAlongSession — clock runs; hits within ±80 ms (Perfeito) / ±160 ms (Bom) of the attack, else miss.
  */
 export { Transport } from './transport';
-export { PracticeSession, starsFor, matches, type EventStatus, type PlayOutcome } from './practice';
+export { Session, starsFor, type EventStatus, type Mode, type Loop } from './session';
+export { WaitSession, type PlayOutcome } from './practice';
+export { PlayAlongSession, WINDOW, DECISION, type Timing, type TimedOutcome } from './playalong';

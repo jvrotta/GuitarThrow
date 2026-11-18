@@ -134,3 +134,18 @@ export function speech(x: Float32Array, t0: number, seconds: number, gain = 0.08
     x[i0 + n]! += gain * env * s;
   }
 }
+
+/** Strum: low to high strings, `spread` seconds apart (a down-stroke). */
+export function strum(x: Float32Array, midis: readonly number[], start: number, o: PluckOptions & { spread?: number } = {}) {
+  const { spread = 0.012, ...p } = o;
+  midis.forEach((m, i) => pluck(x, m, start + i * spread, { gain: 0.12, ...p }));
+}
+
+/** Open-position voicings, low to high. */
+export const CHORDS: Record<string, number[]> = {
+  Em: [40, 47, 52, 55, 59, 64],
+  Am: [45, 52, 57, 60, 64],
+  C: [48, 52, 55, 60, 64],
+  G: [43, 47, 50, 55, 59, 67],
+  D: [50, 57, 62, 66],
+};

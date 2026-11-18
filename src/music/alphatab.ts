@@ -1,7 +1,8 @@
 // Converts an alphaTab Score into our Song. Used at build time (scripts/build-content.mjs, via Node's
-// type stripping — so runtime imports need the .ts extension) and, in M6, at runtime for imported
-// Guitar Pro / MusicXML files. Minimal structural types keep alphaTab out of the app bundle.
+// type stripping — so runtime imports need the .ts extension) and at runtime for imported Guitar Pro /
+// MusicXML files (import.ts loads alphaTab lazily). Minimal structural types keep alphaTab out of the bundle.
 import { assignFingers } from './fingering.ts';
+import { placeNote } from './notes.ts';
 import type { NoteRef, Song, SongEvent, SongMeta } from './song';
 
 const TICKS_PER_BEAT = 960;
@@ -18,19 +19,28 @@ interface AtBeat {
   playbackStart: number;
   playbackDuration: number;
   notes: AtNote[];
+  chord?: { name: string } | null;
+}
+interface AtStaff {
+  tuning: number[];
+  isPercussion?: boolean;
+  bars: { voices: { beats: AtBeat[] }[] }[];
 }
 interface AtScore {
   title: string;
   tempo: number;
   masterBars: { start: number; timeSignatureNumerator: number; timeSignatureDenominator: number }[];
-  tracks: { staves: { tuning: number[]; bars: { voices: { beats: AtBeat[] }[] }[] }[] }[];
+  tracks: { name?: string; staves: AtStaff[] }[];
 }
 
 /** Meta fields not present in the score come from the caller (file header or import dialog). */
 export function scoreToSong(score: AtScore, meta: Omit<SongMeta, 'tempo' | 'title'> & Partial<SongMeta>): Song {
-  const staff = score.tracks[0]?.staves[0];
+  // First guitar-like staff (6 strings, not drums); files often start with a vocal or piano track.
+  const staves = score.tracks.flatMap((t) => t.staves).filter((st) => !st.isPercussion);
+  const staff = staves.find((st) => st.tuning.length === 6) ?? staves[0];
   if (!staff) throw new Error('Partitura sem faixa/pauta.');
   const strings = staff.tuning.length;
+  const tuning = strings === 6 ? [...staff.tuning].reverse() : [40, 45, 50, 55, 59, 64];
   const events: SongEvent[] = [];
 
   staff.bars.forEach((bar, i) => {
@@ -41,14 +51,16 @@ export function scoreToSong(score: AtScore, meta: Omit<SongMeta, 'tempo' | 'titl
       const played = b.notes.filter((n) => !n.isTieDestination);
       if (played.length === 0) continue;
       const notes: NoteRef[] = played
-        .map((n) => ({
-          string: strings - n.string + 1,
-          fret: n.fret,
-          midi: n.realValue,
-          ...(n.leftHandFinger >= 1 ? { finger: n.leftHandFinger } : {}),
-        }))
+        .map((n) => {
+          // Scores without tablature (MusicXML from notation apps) have no string/fret: place the note.
+          const pos = strings === 6 && n.string >= 1 && n.fret >= 0 ? { string: strings - n.string + 1, fret: n.fret } : placeNote(n.realValue, tuning);
+          return { ...pos, midi: n.realValue, ...(n.leftHandFinger >= 1 ? { finger: n.leftHandFinger } : {}) };
+        })
+        .filter((n) => n.fret >= 0)
         .sort((a, c) => a.string - c.string);
-      events.push({ beat: (barStart + b.playbackStart) / TICKS_PER_BEAT, dur: b.playbackDuration / TICKS_PER_BEAT, notes });
+      if (notes.length === 0) continue;
+      const chord = b.chord?.name;
+      events.push({ beat: (barStart + b.playbackStart) / TICKS_PER_BEAT, dur: b.playbackDuration / TICKS_PER_BEAT, notes, ...(chord ? { chord } : {}) });
     }
   });
   events.sort((a, b) => a.beat - b.beat);
@@ -64,7 +76,7 @@ export function scoreToSong(score: AtScore, meta: Omit<SongMeta, 'tempo' | 'titl
     title: meta.title ?? score.title,
     tempo: meta.tempo ?? score.tempo,
     timeSig: [first?.timeSignatureNumerator ?? 4, first?.timeSignatureDenominator ?? 4],
-    tuning: [...staff.tuning].reverse(),
+    tuning,
     bars: mb.map((m) => m.start / TICKS_PER_BEAT),
     length: last ? last.start / TICKS_PER_BEAT + barBeats(last) : 0,
     events,

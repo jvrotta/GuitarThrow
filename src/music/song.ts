@@ -16,9 +16,12 @@ export interface SongEvent {
   dur: number;
   /** One note = single note; several = chord / double stop. Rests are not stored. */
   notes: NoteRef[];
+  /** Chord name shown over the tab ("Em", "G"), when the source names it. */
+  chord?: string;
 }
 
-export type SongKind = 'exercise' | 'song';
+/** Library groups: built-in exercises, chord exercises and songs; `imported` = the user's own files. */
+export type SongKind = 'exercise' | 'chords' | 'song' | 'imported';
 
 export interface SongMeta {
   id: string;

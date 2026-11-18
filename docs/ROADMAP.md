@@ -4,10 +4,15 @@
 
 ## Próximo passo
 
-1. **Usuário**: testar de novo no iPhone o juiz refeito — "Cordas soltas" (deixe soar), "Cromático", uma nota errada,
-   e ruídos (bater no corpo do violão, palmas, falar perto). Se algo falhar, gravar 5 s no painel de debug do afinador
-   e mandar o WAV (vira fixture em `tests/fixtures/`).
-2. M4 — Modo Espera com acordes (o juiz já checa várias notas-alvo; falta exigir o acorde inteiro).
+1. **Teste completo no iPhone (usuário, com o violão)**, nesta ordem:
+   - Ajustes → **Calibrar com o violão** (corda solta a cada clique) → Salvar.
+   - Espera: "Cordas soltas", "Cromático", uma nota errada, ruídos (batida no corpo, palmas, fala).
+   - Acordes: "Mi menor e Lá menor" (tocar um acorde incompleto de propósito → "Faltou …"), "Sol, Dó e Ré".
+   - Play-along: "Cordas soltas" a 50 % e 100 % (Perfeito/Bom, adiantado/atrasado, clique do metrônomo audível?),
+     "Ritmo: Lá menor, Dó, Sol, Ré"; loop A–B; resumo e estrelas na biblioteca; "Continuar" na tela inicial.
+   - Importar: colar uma tab em texto; abrir um arquivo .gp (se tiver).
+   Se algo falhar: gravar 5 s no painel de debug do afinador e mandar o WAV (vira fixture em `tests/fixtures/`).
+2. Ajustar o que o teste mostrar; depois ampliar a biblioteca de domínio público (M6).
 
 ## Marcos
 
@@ -47,16 +52,21 @@
 - [ ] Teste no iPhone (usuário)
 
 ### M4 — Modo Espera: acordes
-- [ ] Chroma + comparação com o acorde esperado
+- [x] Juiz de acordes: harmônicos próprios de cada nota + cobertura acima do acaso (não chroma; DESIGN §7); "Faltou …"
+- [x] Nome do acorde na tab e na dica; 3 exercícios de acordes (Em/Am, G/C/D, ritmo Am–C–G–D)
+- [ ] Teste no iPhone (usuário)
 
 ### M5 — Play-along
-- [ ] Transport, metrônomo, velocidade, loop A–B
-- [ ] Pontuação por nota + calibração de latência
+- [x] `PlayAlongSession`: janelas Perfeito/Bom, adiantado/atrasado, erro por tempo; tempo medido no ataque
+- [x] Metrônomo (clique sem altura, no AudioContext do mic) + contagem de 1–2 compassos; loop A–B
+- [x] Calibração de latência (tela própria) + ajuste manual em Ajustes
+- [x] Teste de integração com áudio sintético (no tempo, ±120 ms, ±250 ms, nota pulada, acorde)
+- [ ] Teste no iPhone (usuário)
 
 ### M6 — Conteúdo e progresso
 - [ ] Biblioteca de domínio público ampliada
-- [ ] Importadores: Guitar Pro / MusicXML (alphaTab sob demanda), tab em texto
-- [ ] Progresso por música
+- [x] Importadores: tab em texto (parser próprio), Guitar Pro / MusicXML (alphaTab sob demanda); apagar importada
+- [x] Progresso por música (melhor por modo, estrelas na biblioteca), "Continuar", tela Ajustes
 
 ## Problemas conhecidos
 
@@ -66,10 +76,15 @@
 - iOS ignora `orientation` do manifest: a tela da música mostra "Gire o celular" em retrato.
 - `npm audit` acusa ReDoS em `picomatch`/`minimatch`/`glob` via vite/vitest/vite-plugin-pwa: só ferramentas de build,
   nada vai para o app publicado. Reavaliar ao atualizar dependências.
+- Painel do navegador oculto (Claude Code) estrangula a animação: o Play-along só foi verificado por teste de integração
+  e a calibração com som simulado; o tempo real precisa do teste no iPhone.
+- Importar Guitar Pro/MusicXML precisa de internet na 1ª vez (alphaTab fica fora do precache).
+- No iPhone, com o microfone aberto, o som do metrônomo pode sair baixo (rota de áudio do iOS): conferir no teste.
 - No Git Bash do Windows, `BASE_PATH=/x/` é convertido em caminho Windows; use `MSYS_NO_PATHCONV=1` para testar localmente.
 
 ## Histórico (1 linha por tarefa, mais recente no topo)
 
+- 2026-11-18 — M4/M5/M6 sem violão: acordes no modo Espera, Play-along (Perfeito/Bom, metrônomo, contagem, loop A–B), calibração, Ajustes, progresso + "Continuar", importação (texto, GP/MusicXML sob demanda); 87 testes; verificado no navegador com som simulado.
 - 2026-11-18 — Juiz do modo Espera refeito (relato: ruído virava nota, notas confundidas): análise espectral do som novo após cada ataque, harmônicos destacados, afinação estável; áudio de teste realista (Karplus–Strong, mic de celular, palmas, batidas, fala); 61 testes; verificado no navegador.
 - 2026-11-18 — M3: sessão de prática no modo Espera (juiz pela nota-alvo, ataque de 11 ms, dedos, bolinha, mini-mapa, resumo); 46 testes; verificado no navegador com som simulado. Corrigido mic no `npm run dev` (worklet em public/).
 - 2026-11-18 — Lógica de tocar repensada (referência de app de ensino): sessão de prática, pílulas por dedo, bolinha, precisão + combo (DESIGN §9).

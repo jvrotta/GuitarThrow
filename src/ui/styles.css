@@ -69,9 +69,6 @@ button { font: inherit; color: inherit; cursor: pointer; }
 .hero-text span { color: var(--muted); }
 .chevron { font-size: 2rem; color: var(--accent); line-height: 1; }
 
-.soon h3 { margin: 0 0 8px; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); }
-.soon-item { display: grid; gap: 2px; padding: 14px 16px; border-radius: var(--radius); background: var(--surface); margin-bottom: 8px; opacity: 0.7; }
-.soon-item span { color: var(--muted); font-size: 0.9rem; }
 .home footer { color: var(--muted); font-size: 0.75rem; text-align: center; }
 
 @media (orientation: landscape) and (max-height: 500px) {

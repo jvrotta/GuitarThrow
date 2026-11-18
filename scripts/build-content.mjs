@@ -1,6 +1,6 @@
 // Converts content/songs/*.tex (alphaTex) into content/build/<id>.json (Song) and content/catalog.json.
 // Run: npm run content (also runs before build and test). Fails with file:line on any error.
-// Header lines "// @kind exercise|song", "// @level 1-5", "// @source <text>" are required.
+// Header lines "// @kind exercise|chords|song", "// @level 1-5", "// @source <text>" are required.
 import { readFileSync, readdirSync, writeFileSync, mkdirSync, rmSync } from 'node:fs';
 import { basename, join } from 'node:path';
 import * as alphaTab from '@coderline/alphatab';
@@ -29,7 +29,7 @@ function parse(file) {
     .join('\n');
 
   for (const k of ['kind', 'level', 'source']) if (!meta[k]) return fail(file, `falta o cabeçalho "// @${k}"`);
-  if (!['exercise', 'song'].includes(meta.kind)) return fail(file, '@kind deve ser exercise ou song');
+  if (!['exercise', 'chords', 'song'].includes(meta.kind)) return fail(file, '@kind deve ser exercise, chords ou song');
 
   let score;
   try {

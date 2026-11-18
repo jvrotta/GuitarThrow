@@ -70,3 +70,30 @@ export function drawCountIn(ctx: CanvasRenderingContext2D, f: TabFrame, g: TabGe
   ctx.fillText(String(f.countIn), g.cursorX + g.ppb * 1.2, h / 2);
   ctx.globalAlpha = 1;
 }
+
+/** Chord names over the tab, written where the chord changes. */
+export function drawChords(ctx: CanvasRenderingContext2D, song: Song, g: TabGeometry, t: TabTheme, x: (b: number) => number, from: number, to: number) {
+  const ev = song.events;
+  ctx.font = '800 15px -apple-system, system-ui, sans-serif';
+  ctx.textAlign = 'left';
+  ctx.textBaseline = 'alphabetic';
+  ctx.fillStyle = t.accent;
+  for (let i = Math.max(0, firstEventAfter(ev, from) - 1); i < ev.length && ev[i]!.beat < to; i++) {
+    const c = ev[i]!.chord;
+    if (c && c !== ev[i - 1]?.chord) ctx.fillText(c, x(ev[i]!.beat) - g.r, g.y(1) - g.r - 22);
+  }
+}
+
+/** A–B loop: shaded region with its edges. */
+export function drawLoop(ctx: CanvasRenderingContext2D, f: TabFrame, g: TabGeometry, t: TabTheme, x: (b: number) => number, h: number) {
+  if (!f.loop) return;
+  const a = x(f.loop.a);
+  const b = x(f.loop.b);
+  ctx.fillStyle = t.accent;
+  ctx.globalAlpha = 0.07;
+  ctx.fillRect(a, 0, b - a, h);
+  ctx.globalAlpha = 0.8;
+  ctx.fillRect(a - 1, g.y(1) - g.r - 4, 2, g.y(6) - g.y(1) + 2 * g.r + 8);
+  ctx.fillRect(b - 1, g.y(1) - g.r - 4, 2, g.y(6) - g.y(1) + 2 * g.r + 8);
+  ctx.globalAlpha = 1;
+}

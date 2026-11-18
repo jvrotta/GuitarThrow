@@ -47,3 +47,18 @@ export function stringFretToMidi(string: number, fret: number, tuning: readonly 
   if (open === undefined) throw new RangeError(`invalid string ${string}`);
   return open + fret;
 }
+
+/**
+ * Where to play a note that came without tablature: the highest string that reaches it within frets
+ * 0–4 (first position), else the lowest fret on any string; fret −1 when the guitar cannot play it.
+ */
+export function placeNote(midi: number, tuning: readonly number[] = STANDARD_TUNING): { string: number; fret: number } {
+  let best = { string: 1, fret: -1 };
+  for (let s = 1; s <= tuning.length; s++) {
+    const fret = midi - tuning[tuning.length - s]!;
+    if (fret < 0 || fret > 20) continue;
+    if (fret <= 4) return { string: s, fret };
+    if (best.fret < 0 || fret < best.fret) best = { string: s, fret };
+  }
+  return best;
+}

@@ -1,11 +1,23 @@
-import { Logo, MusicIcon, TunerIcon } from './icons';
+import { useEffect, useState } from 'preact/hooks';
+import type { Mode } from '../engine';
+import { lastPlayed, type LastPlayed } from '../storage';
+import { GearIcon, Logo, MusicIcon, PlayIcon, TunerIcon } from './icons';
 
-const SOON = [
-  { title: 'Acordes', text: 'Reconhecer acordes inteiros, não só uma nota' },
-  { title: 'Play-along', text: 'Toque junto no andamento, com pontuação' },
-];
+interface Props {
+  onTuner: () => void;
+  onLibrary: () => void;
+  onSettings: () => void;
+  onContinue: (id: string, mode: Mode) => void;
+}
 
-export function Home({ onTuner, onLibrary }: { onTuner: () => void; onLibrary: () => void }) {
+const MODE_NAME: Record<Mode, string> = { wait: 'modo Espera', play: 'Play-along' };
+
+export function Home({ onTuner, onLibrary, onSettings, onContinue }: Props) {
+  const [last, setLast] = useState<LastPlayed | null>(null);
+  useEffect(() => {
+    void lastPlayed().then((l) => setLast(l ?? null));
+  }, []);
+
   return (
     <main class="home">
       <header class="brand">
@@ -17,13 +29,28 @@ export function Home({ onTuner, onLibrary }: { onTuner: () => void; onLibrary: (
       </header>
 
       <div class="home-body">
-        <button class="hero-card" onClick={onLibrary}>
+        {last && (
+          <button class="hero-card" onClick={() => onContinue(last.id, last.mode)}>
+            <span class="hero-icon">
+              <PlayIcon />
+            </span>
+            <span class="hero-text">
+              <strong>Continuar</strong>
+              <span>
+                {last.title} · {MODE_NAME[last.mode]}
+              </span>
+            </span>
+            <span class="chevron">›</span>
+          </button>
+        )}
+
+        <button class={`hero-card ${last ? 'secondary' : ''}`} onClick={onLibrary}>
           <span class="hero-icon">
             <MusicIcon />
           </span>
           <span class="hero-text">
             <strong>Músicas</strong>
-            <span>Modo Espera: só avança quando você acerta a nota</span>
+            <span>Exercícios, acordes e suas tabs: modo Espera ou Play-along</span>
           </span>
           <span class="chevron">›</span>
         </button>
@@ -39,15 +66,16 @@ export function Home({ onTuner, onLibrary }: { onTuner: () => void; onLibrary: (
           <span class="chevron">›</span>
         </button>
 
-        <section class="soon">
-          <h3>Em breve</h3>
-          {SOON.map((s) => (
-            <div class="soon-item" key={s.title}>
-              <strong>{s.title}</strong>
-              <span>{s.text}</span>
-            </div>
-          ))}
-        </section>
+        <button class="hero-card secondary" onClick={onSettings}>
+          <span class="hero-icon">
+            <GearIcon />
+          </span>
+          <span class="hero-text">
+            <strong>Ajustes</strong>
+            <span>Calibrar o microfone, metrônomo, contagem</span>
+          </span>
+          <span class="chevron">›</span>
+        </button>
       </div>
 
       <footer>versão {__BUILD_ID__}</footer>

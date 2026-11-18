@@ -1,5 +1,15 @@
 [
   {
+    "id": "acordes-em-am",
+    "kind": "chords",
+    "level": 1,
+    "source": "Exercício original",
+    "title": "Acordes: Mi menor e Lá menor",
+    "tempo": 60,
+    "notes": 9,
+    "bars": 7
+  },
+  {
     "id": "cordas-soltas",
     "kind": "exercise",
     "level": 1,
@@ -17,6 +27,16 @@
     "title": "Cromático 1-2-3-4",
     "tempo": 60,
     "notes": 24,
+    "bars": 6
+  },
+  {
+    "id": "acordes-sol-do-re",
+    "kind": "chords",
+    "level": 2,
+    "source": "Exercício original",
+    "title": "Acordes: Sol, Dó e Ré",
+    "tempo": 60,
+    "notes": 8,
     "bars": 6
   },
   {
@@ -38,5 +58,15 @@
     "tempo": 100,
     "notes": 30,
     "bars": 8
+  },
+  {
+    "id": "acordes-ritmo-am-c-g-d",
+    "kind": "chords",
+    "level": 3,
+    "source": "Exercício original",
+    "title": "Ritmo: Lá menor, Dó, Sol, Ré",
+    "tempo": 70,
+    "notes": 17,
+    "bars": 5
   }
 ]

@@ -1,11 +1,17 @@
 import type { PitchFrame } from './analyzer';
-import { PowerSpectrum } from './fft';
+import { ChordTracker } from './chord';
+import { PowerSpectrum, windowFill } from './fft';
 import { HarmonicScorer, type NoteEvidence, type ScoreOptions } from './harmonic';
 import { DEFAULT_ONSET, NoteDetector, type OnsetOptions } from './onset';
 
+/** Expected notes: one group per event — a single note, or a chord (all notes together). */
+export type TargetGroups = readonly (readonly number[])[];
+
 export type Judgement =
-  | { kind: 'hit'; time: number }
-  | { kind: 'wrong'; time: number; midi: number }
+  /** `group` = index in the targets, `midi` = its (lowest) note, `time` = attack time (analyzer clock). */
+  | { kind: 'hit'; group: number; midi: number; time: number }
+  /** Another note won; for a chord, `missing` lists the chord notes that were not heard. */
+  | { kind: 'wrong'; time: number; midi: number; missing?: number[] }
   /** The note an attack produced, right or wrong (for "♪ Mi" feedback). */
   | { kind: 'heard'; time: number; midi: number };
 
@@ -26,6 +32,8 @@ export interface JudgeOptions extends ScoreOptions {
   drift: number;
   /** Max distance from the nominal note (cents); beyond that, tune the guitar. */
   maxCents: number;
+  /** Chords: share of the new energy their notes must explain together, above chance. */
+  coverage: number;
 }
 
 export const DEFAULT_JUDGE: JudgeOptions = {
@@ -40,6 +48,7 @@ export const DEFAULT_JUDGE: JudgeOptions = {
   voteSpread: 10,
   drift: 5,
   maxCents: 25,
+  coverage: 0.5,
 };
 
 /** Plucks rise within a few ms: a short lookback ignores slow swells such as speech syllables. */
@@ -48,13 +57,7 @@ export const JUDGE_ONSET: OnsetOptions = { ...DEFAULT_ONSET, lookback: 3, riseDb
 const N = 8192;
 const REF_FRAMES = 3;
 
-/** Share of the Hann window's energy (Σw²) in its newest `s` samples. */
-const FILL = (() => {
-  const c = new Float64Array(N + 1);
-  for (let i = 1; i <= N; i++) c[i] = c[i - 1]! + (0.5 - 0.5 * Math.cos((2 * Math.PI * (N - i)) / N)) ** 2;
-  return c.map((v) => v / c[N]!);
-})();
-const fill = (s: number) => FILL[Math.max(0, Math.min(N, Math.round(s)))]!;
+const fill = windowFill(N);
 
 /**
  * Wait-mode listener: knows the expected note(s) and turns the frame stream into hit / wrong.
@@ -73,7 +76,8 @@ export class WaitJudge {
   private readonly cur = new Float32Array(N / 2 + 1);
   private readonly diff = new Float32Array(N / 2 + 1);
   private key: number | null = null;
-  private target: number[] = [];
+  private groups: number[][] = [];
+  private readonly chords = new ChordTracker();
   private since = Infinity;
   private attackTime = -Infinity;
   /** Previous attack and the window share it filled in the reference: its note may still be growing. */
@@ -97,11 +101,17 @@ export class WaitJudge {
     this.scorer = new HarmonicScorer(sampleRate, N);
   }
 
-  /** Expected notes; `key` identifies the target (e.g. event index) so the same target is not reset. */
+  /** One expected event (a note or a chord); `key` identifies it so the same target is not reset. */
   setTarget(key: number | null, midis: readonly number[]): void {
+    this.setTargets(key, midis.length ? [midis] : []);
+  }
+
+  /** Several candidate events at once (Play-along: everything near the cursor). */
+  setTargets(key: number | null, groups: TargetGroups): void {
     if (key === this.key) return;
     this.key = key;
-    this.target = [...midis];
+    this.groups = groups.map((g) => [...new Set(g)].sort((a, b) => a - b));
+    this.chords.setGroups(this.groups);
   }
 
   push(f: PitchFrame): void {
@@ -119,6 +129,7 @@ export class WaitJudge {
       this.consumed = false;
       this.votes.clear();
       this.track.clear();
+      this.chords.reset();
     }
     this.spec.compute(f.samples, this.cur);
     if (!this.consumed && this.since >= 1) this.examine(f.time);
@@ -145,18 +156,23 @@ export class WaitJudge {
     const steady = (e: NoteEvidence | undefined): e is NoteEvidence => !!e && (track.get(e.midi)?.run ?? 0) >= o.steady;
     let best: NoteEvidence | null = null;
     for (const e of ev) if (steady(e) && (!best || e.score > best.score)) best = e;
-    if (!best) return;
-    const v = this.votes.get(best.midi) ?? { n: 0, lo: best.cents, hi: best.cents };
-    this.votes.set(best.midi, { n: v.n + 1, lo: Math.min(v.lo, best.cents), hi: Math.max(v.hi, best.cents) });
-    const hit = this.target.find((m) => {
-      const e = ev[m - this.scorer.lo];
-      return steady(e) && e.score >= o.rival * best.score;
-    });
-    if (hit === undefined) return;
+    if (best) {
+      const v = this.votes.get(best.midi) ?? { n: 0, lo: best.cents, hi: best.cents };
+      this.votes.set(best.midi, { n: v.n + 1, lo: Math.min(v.lo, best.cents), hi: Math.max(v.hi, best.cents) });
+      const b = best;
+      const single = this.groups.findIndex((g) => g.length === 1 && steady(ev[g[0]! - this.scorer.lo]) && ev[g[0]! - this.scorer.lo]!.score >= o.rival * b.score);
+      if (single >= 0) return this.hit(single);
+    }
+    const chord = this.chords.update(ev, this.scorer.lo, this.groups, (m) => this.scorer.coverage(m), o);
+    if (chord >= 0) this.hit(chord);
+  }
+
+  private hit(group: number) {
+    const midi = this.groups[group]![0]!;
     this.consumed = true;
-    this.last = { midi: hit, time: this.attackTime };
-    this.emit({ kind: 'hit', time });
-    this.emit({ kind: 'heard', time, midi: hit });
+    this.last = { midi, time: this.attackTime };
+    this.emit({ kind: 'hit', group, midi, time: this.attackTime });
+    this.emit({ kind: 'heard', time: this.attackTime, midi });
   }
 
   /** Closes the current attack: if another note clearly won, it was a wrong note. */
@@ -165,11 +181,19 @@ export class WaitJudge {
     this.consumed = true;
     let top: [number, { n: number; lo: number; hi: number }] | null = null;
     for (const v of this.votes) if (!top || v[1].n > top[1].n) top = v;
-    if (!top || top[1].n < this.o.votes || top[1].hi - top[1].lo > this.o.voteSpread) return;
-    const midi = top[0];
-    this.last = { midi, time: this.attackTime };
-    this.emit({ kind: 'heard', time: this.attackTime, midi });
-    if (this.target.length && !this.target.includes(midi)) this.emit({ kind: 'wrong', time: this.attackTime, midi });
+    const clear = top && top[1].n >= this.o.votes && top[1].hi - top[1].lo <= this.o.voteSpread;
+    const all = this.groups.flat();
+    const chord = this.chords.best?.missing.length ? this.chords.best : null;
+    const time = this.attackTime;
+    if (clear) {
+      const midi = top![0];
+      this.last = { midi, time };
+      this.emit({ kind: 'heard', time, midi });
+      if (all.length && (!all.includes(midi) || chord)) this.emit({ kind: 'wrong', time, midi, ...(chord ? { missing: chord.missing } : {}) });
+    } else if (chord) {
+      const midi = this.groups[chord.group]!.find((m) => !chord.missing.includes(m))!;
+      this.emit({ kind: 'wrong', time, midi, missing: chord.missing });
+    }
   }
 
   private remember() {

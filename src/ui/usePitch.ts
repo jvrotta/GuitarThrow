@@ -8,6 +8,8 @@ export interface PitchState {
   status: MicStatus;
   error: string;
   info: MicInfo | null;
+  /** The mic's AudioContext while running (metronome, calibration clicks). */
+  ctx: AudioContext | null;
   /** Latest raw frame (debug). */
   frame: PitchFrame | null;
   /** Median-smoothed frequency, null when nothing pitched is heard. */
@@ -30,6 +32,7 @@ export function usePitch(live: boolean): PitchState {
   const [status, setStatus] = useState<MicStatus>('idle');
   const [error, setError] = useState('');
   const [info, setInfo] = useState<MicInfo | null>(null);
+  const [ctx, setCtx] = useState<AudioContext | null>(null);
   const [view, setView] = useState<{ frame: PitchFrame | null; freq: number | null; fps: number }>({
     frame: null,
     freq: null,
@@ -46,6 +49,7 @@ export function usePitch(live: boolean): PitchState {
     releaseLock.current();
     if (s) void s.stop();
     setStatus('idle');
+    setCtx(null);
     setView({ frame: null, freq: null, fps: 0 });
   };
 
@@ -65,6 +69,7 @@ export function usePitch(live: boolean): PitchState {
       .then(async (s) => {
         session.current = s;
         setInfo(s.info);
+        setCtx(s.ctx);
         setStatus('running');
         releaseLock.current = await acquireWakeLock();
       })
@@ -108,6 +113,7 @@ export function usePitch(live: boolean): PitchState {
     status,
     error,
     info,
+    ctx,
     ...view,
     start,
     stop,

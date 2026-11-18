@@ -12,11 +12,11 @@
     "icons": "node scripts/gen-icons.mjs"
   },
   "dependencies": {
+    "@coderline/alphatab": "^1.9.0",
     "pitchy": "^4.1.0",
     "preact": "^11.2.0"
   },
   "devDependencies": {
-    "@coderline/alphatab": "^1.9.0",
     "@preact/preset-vite": "^2.10.6",
     "typescript": "^7.0.2",
     "vite": "^8.3.8",

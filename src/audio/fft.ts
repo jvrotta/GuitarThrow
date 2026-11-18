@@ -78,3 +78,10 @@ export class PowerSpectrum {
     }
   }
 }
+
+/** f(s) = share of a Hann window's energy (Σw²) in its newest `s` samples — how far a new sound has entered. */
+export function windowFill(n: number): (s: number) => number {
+  const c = new Float64Array(n + 1);
+  for (let i = 1; i <= n; i++) c[i] = c[i - 1]! + (0.5 - 0.5 * Math.cos((2 * Math.PI * (n - i)) / n)) ** 2;
+  return (s) => c[Math.max(0, Math.min(n, Math.round(s)))]! / c[n]!;
+}

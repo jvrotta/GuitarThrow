@@ -10,11 +10,18 @@ export default defineConfig({
   define: {
     __BUILD_ID__: JSON.stringify((process.env.GITHUB_SHA ?? 'dev').slice(0, 7)),
   },
+  // alphaTab (file import) is ~1.3 MB, loaded only when the user imports a Guitar Pro / MusicXML file.
+  build: { chunkSizeWarningLimit: 1500 },
   plugins: [
     preact(),
     VitePWA({
       registerType: 'autoUpdate',
       includeAssets: ['icons/apple-touch-icon.png'],
+      // Not precached: alphaTab is fetched (then cached) the first time a file is imported.
+      workbox: {
+        globIgnores: ['**/alphaTab*'],
+        runtimeCaching: [{ urlPattern: /alphaTab/, handler: 'CacheFirst', options: { cacheName: 'alphatab' } }],
+      },
       manifest: {
         name: 'GuitarThrow',
         short_name: 'GuitarThrow',

@@ -1,6 +1,6 @@
 import { firstEventAfter, type NoteRef, type Song } from '../../music';
 import { LABEL_W, tabGeometry, type TabFrame, type TabGeometry, type TabTheme } from './geometry';
-import { drawBall, drawCountIn, drawPopups } from './overlay';
+import { drawBall, drawChords, drawCountIn, drawLoop, drawPopups } from './overlay';
 
 const LABELS = ['Mi', 'Si', 'Sol', 'Ré', 'Lá', 'Mi'];
 const DARK_TEXT = '#0d0f14';
@@ -15,9 +15,11 @@ export function drawTab(ctx: CanvasRenderingContext2D, song: Song, f: TabFrame, 
   const from = f.pos - g.cursorX / g.ppb - 1;
   const to = f.pos + (w - g.cursorX) / g.ppb + 1;
   ctx.clearRect(0, 0, w, h);
+  drawLoop(ctx, f, g, t, x, h);
   drawGrid(ctx, song, g, t, x, from, to);
   drawStrings(ctx, g, t, w);
   drawNotes(ctx, song, f, g, t, x, from, to, now);
+  drawChords(ctx, song, g, t, x, from, to);
   drawCursor(ctx, g, t);
   drawBall(ctx, song, f, g, t, now);
   drawPopups(ctx, f, g, x, now);

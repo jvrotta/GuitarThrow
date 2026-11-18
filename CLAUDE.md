@@ -8,7 +8,7 @@ em dois modos: **Espera** (só avança ao acertar) e **Play-along** (no andament
 
 ## Estado atual
 
-Marco atual: **M3 — modo Espera com juiz refeito (ruído/confusão de notas); aguardando novo teste no iPhone**. No ar: https://jvrotta.github.io/GuitarThrow/
+Marco atual: **M4 + M5 + M6 (parcial) prontos sem violão — acordes, Play-along, calibração, Ajustes, progresso, importação; aguardando o teste completo no iPhone**. No ar: https://jvrotta.github.io/GuitarThrow/
 
 ## Mapa — "preciso de X → abro Y"
 
@@ -19,14 +19,15 @@ Marco atual: **M3 — modo Espera com juiz refeito (ruído/confusão de notas); 
 | Formato das músicas e regras de conteúdo | `docs/CONTENT.md` |
 | Lista de músicas existentes (sem abrir cada uma) | `content/catalog.json` (gerado) |
 | Fonte de uma música / JSON gerado | `content/songs/<id>.tex` / `content/build/<id>.json` |
-| Microfone, pitch, ataque, juiz do modo Espera, acordes (chroma) | `src/audio/index.ts` (worklet: `public/capture.worklet.js`) |
-| Modelo da música, nota↔MIDI↔corda/traste, importadores | `src/music/index.ts` |
-| Relógio, sessão de prática (Espera/Play-along), pontuação | `src/engine/index.ts` |
+| Microfone, pitch, ataque, juiz (notas e acordes, espectral) | `src/audio/index.ts` (juiz: `judge.ts`, `harmonic.ts`, `chord.ts`; worklet: `public/capture.worklet.js`) |
+| Modelo da música, nota↔MIDI↔corda/traste, importadores (texto, GP/MusicXML) | `src/music/index.ts` (`texttab.ts`, `import.ts`) |
+| Relógio, sessão de prática (Espera/Play-along), pontuação, loop | `src/engine/index.ts` (`session.ts`, `practice.ts`, `playalong.ts`) |
 | Telas e componentes | `src/ui/index.ts` |
+| Telas Ajustes, Calibrar, Importar | `src/ui/SettingsPage.tsx`, `src/ui/Calibrate.tsx`, `src/ui/Import.tsx` (estilos: `src/ui/forms.css`) |
 | Desenho da tab (canvas, geometria, cores, bolinha) | `src/ui/tab/geometry.ts`, `draw.ts`, `overlay.ts`, `TabCanvas.tsx` |
-| Tela de prática (HUD, mini-mapa, resumo) | `src/ui/practice/` |
-| Persistência (IndexedDB) | `src/storage/index.ts` |
-| Entrada do app e estilos (tokens / páginas / afinador / prática) | `src/main.tsx`, `src/ui/styles.css`, `src/ui/pages.css`, `src/ui/tuner/tuner.css`, `src/ui/practice/practice.css` |
+| Tela de prática (HUD, controles, mini-mapa, resumo; ligação mic→juiz, relógio+metrônomo) | `src/ui/practice/` (`useJudge.ts`, `useClock.ts`, `metronome.ts`) |
+| Persistência (IndexedDB: ajustes, progresso, importadas) | `src/storage/index.ts` |
+| Entrada do app e estilos (tokens / páginas / afinador / prática / formulários) | `src/main.tsx`, `src/ui/styles.css`, `src/ui/pages.css`, `src/ui/tuner/tuner.css`, `src/ui/practice/practice.css`, `src/ui/forms.css` |
 | Afinador: cabeça do violão (SVG) e medidor | `src/ui/tuner/Headstock.tsx`, `src/ui/tuner/Gauge.tsx` |
 | Scripts: conteúdo (alphaTex → JSON + catálogo), ícones | `scripts/build-content.mjs`, `scripts/gen-icons.mjs` |
 | Testes (Vitest), gerador de áudio realista e áudios de teste (WAV) | `tests/`, `tests/synth.ts`, `tests/fixtures/` |
@@ -35,7 +36,7 @@ Marco atual: **M3 — modo Espera com juiz refeito (ruído/confusão de notas); 
 | Ícones gerados | `public/icons/` (via `npm run icons`) |
 | Servidores para o painel de preview | `.claude/launch.json` (`dev`, `preview`) |
 
-`src/storage` ainda exporta `{}`; o comentário de cada `index.ts` diz o que existe e em que marco entra o resto.
+O comentário de cada `index.ts` diz o que existe e em que marco entra o resto.
 
 ## Como ler o código sem gastar tokens
 

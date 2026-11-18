@@ -1,11 +1,12 @@
-/* Practice session (M3). Tokens (incl. --finger-N) come from styles.css; tab/controls from pages.css. */
+/* Practice session (M3–M5). Tokens (incl. --finger-N) come from styles.css; tab/controls from pages.css. */
 
 .practice { height: 100dvh; display: grid; grid-template-rows: auto 1fr auto; padding: 4px 8px 8px; }
 
 .p-hud { gap: 8px; }
 .p-title { flex: 1; min-width: 0; display: flex; align-items: center; gap: 8px; }
 .p-title h2 { overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
-.mode-chip { flex: none; padding: 3px 10px; border-radius: 999px; border: 1px solid var(--line); color: var(--muted); font-size: 0.75rem; }
+.mode-toggle { display: flex; gap: 4px; flex: none; }
+.mode-chip { flex: none; padding: 5px 10px; background: none; border-radius: 999px; border: 1px solid var(--line); color: var(--muted); font-size: 0.75rem; }
 .mode-chip.on { border-color: var(--accent); color: var(--accent); background: #f5a5241a; }
 .stat { flex: none; color: var(--muted); font-size: 0.75rem; text-align: right; line-height: 1.1; }
 .stat b { display: block; color: var(--text); font-size: 1.05rem; font-variant-numeric: tabular-nums; }
@@ -47,8 +48,10 @@
 .practice .chips { flex: none; }
 
 @media (orientation: portrait) {
-  .legend, .mode-chip { display: none; }
+  .legend { display: none; }
+  .p-title h2 { display: none; }
 }
+.loop-btn { flex: none; white-space: nowrap; }
 @media (orientation: landscape) and (max-height: 500px) {
   .practice { padding: 0 8px 4px; }
   .practice .bar { height: 42px; }

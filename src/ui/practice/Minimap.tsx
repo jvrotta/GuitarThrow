@@ -1,11 +1,12 @@
 import { useEffect, useRef } from 'preact/hooks';
-import type { EventStatus } from '../../engine';
+import type { EventStatus, Loop } from '../../engine';
 import type { Song } from '../../music';
 
 interface Props {
   song: Song;
   status: readonly EventStatus[];
   getPos: () => number;
+  loop?: Loop | null;
   /** Tap or drag → jump to that point (beats). */
   onSeek: (beat: number) => void;
 }
@@ -13,7 +14,7 @@ interface Props {
 const COLOR: Record<EventStatus, string> = { pending: 'var(--muted)', hit: 'var(--ok)', miss: 'var(--far)' };
 
 /** Whole-song strip: every note as a tick (colored by result), playhead, tap/drag to seek. */
-export function Minimap({ song, status, getPos, onSeek }: Props) {
+export function Minimap({ song, status, getPos, loop, onSeek }: Props) {
   const box = useRef<HTMLDivElement>(null);
   const head = useRef<HTMLDivElement>(null);
   const dragging = useRef(false);
@@ -52,6 +53,7 @@ export function Minimap({ song, status, getPos, onSeek }: Props) {
       onPointerCancel={() => (dragging.current = false)}
     >
       <svg viewBox={`0 0 ${song.length} 7`} preserveAspectRatio="none" aria-hidden="true">
+        {loop && <rect x={loop.a} y={0} width={loop.b - loop.a} height={7} fill="var(--accent)" opacity={0.18} />}
         {song.bars.slice(1).map((b) => (
           <rect key={b} x={b} y={0} width={song.length / 400} height={7} fill="var(--line)" />
         ))}

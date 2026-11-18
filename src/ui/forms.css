@@ -1,0 +1,47 @@
+/* Ajustes, Calibrar, Importar and library extras. Tokens come from styles.css. */
+
+.lib-row { position: relative; display: flex; align-items: stretch; gap: 6px; }
+.lib-row .lib-item { flex: 1; }
+.lib-del { flex: none; height: auto; margin-bottom: 8px; font-size: 1rem; }
+.lib-add { border: 1px dashed var(--line); background: none; }
+.lib-stars { display: flex; gap: 1px; font-size: 0.9rem; color: var(--line); }
+.lib-stars i { font-style: normal; }
+.lib-stars .on { color: var(--accent); }
+
+.set-group { display: grid; gap: 10px; }
+.set-group h3 { margin: 4px 4px 0; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); }
+.set-row { display: flex; align-items: center; gap: 12px; padding: 14px 16px; border-radius: var(--radius); background: var(--surface); }
+.set-text { flex: 1; display: grid; gap: 3px; min-width: 0; }
+.set-text span { color: var(--muted); font-size: 0.85rem; }
+.set-row input[type='range'] { width: 40%; accent-color: var(--accent); }
+.set-row .chips { flex: none; }
+.stepper { display: flex; align-items: center; gap: 8px; flex: none; }
+.stepper b { min-width: 4.5em; text-align: center; font-variant-numeric: tabular-nums; }
+.switch { width: 26px; height: 26px; accent-color: var(--accent); flex: none; }
+.btn.wide { width: 100%; }
+.btn:disabled { opacity: 0.5; }
+.set-foot { text-align: center; font-size: 0.75rem; }
+.small { margin: 0 4px; font-size: 0.82rem; }
+
+.field {
+  width: 100%; padding: 12px 14px; border-radius: 12px; border: 1px solid var(--line); background: var(--surface);
+  color: var(--text); font: inherit; font-size: 16px; /* 16px: iOS does not zoom in */
+}
+.field:focus { outline: 2px solid var(--accent); outline-offset: -1px; }
+.field.num { width: 6em; text-align: center; }
+.tab-text { min-height: 180px; resize: vertical; font-family: ui-monospace, Menlo, monospace; font-size: 14px; white-space: pre; overflow-x: auto; }
+.file-btn { position: relative; display: grid; place-items: center; overflow: hidden; }
+.file-btn input { position: absolute; inset: 0; opacity: 0; }
+
+.calibrate { position: relative; align-items: center; text-align: center; }
+.cal-help { max-width: 30em; margin: 0; color: var(--muted); line-height: 1.45; }
+.cal-help b { color: var(--text); }
+.cal-beats { display: flex; gap: 12px; margin-top: 12px; }
+.cal-beats i { width: 26px; height: 26px; border-radius: 50%; background: var(--surface-2); transition: background 0.08s; }
+.cal-beats i.past { background: var(--line); }
+.cal-beats i.now { background: var(--accent); box-shadow: 0 0 16px var(--accent); }
+.cal-status { min-height: 1.4em; margin: 0; font-variant-numeric: tabular-nums; }
+.cal-result { display: grid; gap: 4px; }
+.cal-result strong { font-size: 2.4rem; }
+
+.record { color: var(--accent); font-weight: 700; }

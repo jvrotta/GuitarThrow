@@ -4,6 +4,8 @@ import { encodeWav } from './wav';
 
 export interface PitchSession {
   readonly info: MicInfo;
+  /** The mic's AudioContext: the metronome plays on the same clock. */
+  readonly ctx: AudioContext;
   /** Records the next `seconds` of raw mic audio and resolves with a WAV file. */
   record(seconds: number): Promise<Uint8Array<ArrayBuffer>>;
   stop(): Promise<void>;
@@ -44,6 +46,7 @@ export async function startPitchSession(
 
   return {
     info: mic.info,
+    ctx: mic.ctx,
     record(seconds) {
       if (rec) return Promise.reject(new Error('Já está gravando.'));
       return new Promise((done) => {

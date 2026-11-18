@@ -4,5 +4,6 @@ import './ui/styles.css';
 import './ui/pages.css';
 import './ui/tuner/tuner.css';
 import './ui/practice/practice.css';
+import './ui/forms.css';
 
 render(<App />, document.getElementById('app')!);
