@@ -9,6 +9,12 @@
   --ok: #3dd68c;
   --near: #f5a524;
   --far: #ff6b5b;
+  /* Finger colors (tab notes): 0 open, 1 index, 2 middle, 3 ring, 4 little. Never green/red. */
+  --finger-0: #9aa3b5;
+  --finger-1: #4f8cff;
+  --finger-2: #b07cff;
+  --finger-3: #ffd23f;
+  --finger-4: #ff79c6;
   --radius: 16px;
   color-scheme: dark;
   font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', system-ui, sans-serif;

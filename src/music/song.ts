@@ -5,6 +5,8 @@ export interface NoteRef {
   string: number;
   fret: number;
   midi: number;
+  /** Left-hand finger: 0 open string, 1 index, 2 middle, 3 ring, 4 little. Filled by assignFingers when absent. */
+  finger?: number;
 }
 
 export interface SongEvent {

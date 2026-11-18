@@ -1,0 +1,57 @@
+/* Practice session (M3). Tokens (incl. --finger-N) come from styles.css; tab/controls from pages.css. */
+
+.practice { height: 100dvh; display: grid; grid-template-rows: auto 1fr auto; padding: 4px 8px 8px; }
+
+.p-hud { gap: 8px; }
+.p-title { flex: 1; min-width: 0; display: flex; align-items: center; gap: 8px; }
+.p-title h2 { overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+.mode-chip { flex: none; padding: 3px 10px; border-radius: 999px; border: 1px solid var(--line); color: var(--muted); font-size: 0.75rem; }
+.mode-chip.on { border-color: var(--accent); color: var(--accent); background: #f5a5241a; }
+.stat { flex: none; color: var(--muted); font-size: 0.75rem; text-align: right; line-height: 1.1; }
+.stat b { display: block; color: var(--text); font-size: 1.05rem; font-variant-numeric: tabular-nums; }
+.heard { flex: none; color: var(--muted); font-size: 0.85rem; animation: fade-out 1.6s forwards; }
+@keyframes fade-out { 0%, 60% { opacity: 1; } 100% { opacity: 0; } }
+
+.p-toast, .p-hint {
+  position: absolute; left: 50%; top: 2px; transform: translateX(-50%); z-index: 1; margin: 0; padding: 6px 14px; border-radius: 999px;
+  background: var(--surface); font-size: 0.85rem; white-space: nowrap; pointer-events: none;
+}
+.p-toast { color: var(--far); border: 1px solid #ff6b5b55; animation: pop-in 0.18s ease-out; }
+.p-hint { color: var(--muted); }
+@keyframes pop-in { from { transform: translate(-50%, 6px); opacity: 0; } }
+
+.p-overlay {
+  position: absolute; inset: 0; z-index: 2; display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: 10px; padding: 16px; border: 0; border-radius: var(--radius); background: #0d0f14d9; backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px); text-align: center; color: var(--text);
+}
+.p-overlay > strong { font-size: 1.3rem; }
+.p-overlay .muted { max-width: 34em; font-size: 0.9rem; }
+.p-actions { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; margin-top: 6px; }
+.btn { min-height: 44px; padding: 0 18px; border-radius: 999px; border: 1px solid var(--line); background: var(--surface); }
+.btn.primary { border-color: var(--accent); background: var(--accent); color: #1a1205; font-weight: 700; }
+
+.summary .big { font-size: 2.6rem; line-height: 1; }
+.stars { display: flex; gap: 6px; font-size: 2.2rem; color: var(--line); }
+.stars .on { color: var(--accent); text-shadow: 0 0 18px #f5a52480; }
+
+.minimap { position: relative; flex: 1; min-width: 80px; height: 40px; border-radius: 10px; background: var(--surface); touch-action: none; overflow: hidden; }
+.minimap svg { position: absolute; inset: 4px 0; width: 100%; height: calc(100% - 8px); pointer-events: none; }
+.minimap-head { position: absolute; top: 0; bottom: 0; width: 2px; margin-left: -1px; background: var(--accent); box-shadow: 0 0 8px var(--accent); pointer-events: none; }
+
+.legend { display: flex; gap: 4px; flex: none; }
+.legend i {
+  width: 22px; height: 22px; border-radius: 50%; display: grid; place-items: center; font-style: normal;
+  font-size: 0.72rem; font-weight: 800; color: #0d0f14;
+}
+.practice .chips { flex: none; }
+
+@media (orientation: portrait) {
+  .legend, .mode-chip { display: none; }
+}
+@media (orientation: landscape) and (max-height: 500px) {
+  .practice { padding: 0 8px 4px; }
+  .practice .bar { height: 42px; }
+  .practice .controls { padding-top: 2px; }
+  .practice .chip { min-height: 36px; padding: 6px 10px; }
+}

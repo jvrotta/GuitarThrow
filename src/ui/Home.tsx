@@ -1,7 +1,7 @@
 import { Logo, MusicIcon, TunerIcon } from './icons';
 
 const SOON = [
-  { title: 'Modo Espera', text: 'Só avança quando você acerta a nota' },
+  { title: 'Acordes', text: 'Reconhecer acordes inteiros, não só uma nota' },
   { title: 'Play-along', text: 'Toque junto no andamento, com pontuação' },
 ];
 
@@ -23,7 +23,7 @@ export function Home({ onTuner, onLibrary }: { onTuner: () => void; onLibrary: (
           </span>
           <span class="hero-text">
             <strong>Músicas</strong>
-            <span>Exercícios e músicas com a tab rolando</span>
+            <span>Modo Espera: só avança quando você acerta a nota</span>
           </span>
           <span class="chevron">›</span>
         </button>

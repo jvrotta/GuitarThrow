@@ -78,6 +78,8 @@ Cada marco é pequeno, testável no celular e útil sozinho. O afinador vem prim
 | Repositório | **Git**, com navegação por `CLAUDE.md` (mapa) → `docs/ROADMAP.md` → `index.ts` de cada módulo | Nenhuma tarefa precisa ler o repo inteiro nem o histórico do chat. Comandos `/proximo`, `/fechar`, `/musica`, `/bug`. |
 | Hospedagem | **Repositório público + GitHub Pages**, deploy por GitHub Actions a cada push na `main` | URL `https://<usuario>.github.io/<repo>/`; o `base` do Vite vem do nome do repo no workflow. **Settings → Pages → Source tem que ser "GitHub Actions"**: em "Deploy from a branch" o deploy da branch roda depois e publica os fontes crus (página em branco). |
 | Afinador (2º feedback, referência de app de afinador com cabeça do violão) | **Cabeça do violão 3+3** (Ré/Lá/Mi à esquerda, Sol/Si/Mi à direita, como visto de frente): a tarraxa, a corda e o rótulo da corda tocada acendem; **medidor com ponteiro vertical** e ♭/♯; texto "Aperte/Afrouxe". Mantidos: auto + trava (toque no rótulo; chip "Auto" destrava), cents contra a corda solta, ✓ por corda, mic no toque. Visual próprio (SVG desenhado aqui), sem copiar o app de referência. | Padrão de UX para as próximas telas: zero passos extras, pouco texto, alvos de toque ≥ 44 px, layouts próprios para retrato e paisagem. |
+| Detecção no modo Espera (M3) | Juiz **orientado ao alvo** (harmônicos da nota esperada vs. semitons vizinhos) + ataque; detector de altura só para "você tocou X" e legato. Detalhes em §9. | Detector genérico de altura falhava com cordas soando juntas (teste sintético e navegador). Base pronta para acordes no M4 (checar várias notas-alvo). |
+| Worklet do microfone | `public/capture.worklet.js`, carregado por `BASE_URL` | Em `npm run dev` o Vite injetava código de hot-reload no worklet e o microfone falhava ("node name 'capture' is not defined"). |
 | Padrões assumidos | Interface em pt-BR e código em inglês; dados só no aparelho (sem login); tema escuro; Play-along começa só com metrônomo (som de referência sintetizado avaliado no M5) | Pode ser revisto a qualquer momento. |
 
 ### Dependências e motivo
@@ -94,7 +96,7 @@ Cada marco é pequeno, testável no celular e útil sozinho. O afinador vem prim
 ### Parâmetros do analisador (M1, `src/audio/analyzer.ts`)
 
 Janela 2048 amostras, salto 512 (~90 análises/s a 48 kHz), faixa 70–1400 Hz, clareza ≥ 0,9, volume ≥ −55 dB,
-mediana de 5 no afinador. Ajustar com dados reais do iPhone (painel de debug + gravações WAV).
+mediana de 5 no afinador. Cada frame traz também `hopDb`/`hfDb` (ataque) e as últimas 8192 amostras (juiz do modo Espera). Ajustar com dados reais do iPhone (painel de debug + gravações WAV).
 
 ### Formato de autoria das músicas
 
@@ -107,7 +109,44 @@ Escrevo as músicas em **alphaTex** (texto compacto do alphaTab: poucos tokens p
 | M0 | Esqueleto Vite+TS+Preact+PWA, deploy de preview HTTPS para abrir no iPhone |
 | M1 | **Afinador** + painel de debug → valida detecção no seu iPhone |
 | M2 | Modelo + tab rolando (canvas) + pipeline alphaTex→JSON + 3 exercícios |
-| M3 | **Modo Espera — notas simples** (com detecção de ataque) |
+| M3 | **Sessão de prática** (§9) + **Modo Espera — notas simples** (detecção de ataque) |
 | M4 | **Modo Espera — acordes** (chroma vs. acorde esperado) |
-| M5 | **Play-along** (transport, metrônomo, velocidade, loop A–B, pontuação, calibração de latência) |
+| M5 | **Play-along** na mesma sessão (janelas Perfeito/Bom, bolinha no ritmo, metrônomo e contagem, loop A–B pela barra, calibração de latência) |
 | M6 | Biblioteca embutida ampliada + importadores (GP/MusicXML/tab texto) + progresso |
+
+## 9. Sessão de prática (desenho de 2026-11-18, a partir de referência de app de ensino)
+
+A tela da música deixa de ser só visualização: vira uma **sessão** com início, feedback contínuo e resumo.
+Conceitos usados (visual próprio, sem copiar o app de referência):
+
+**Tela (paisagem; retrato mostra "gire o celular")**
+- Topo (HUD): voltar · modo (Espera / Play-along) · velocidade · combo atual · precisão %.
+- Tab: 6 cordas (Mi agudo em cima; 3 graves com textura de corda encapada), linha "agora" a 1/3.
+- **Nota = pílula**: comprimento = duração, número = traste, **cor = dedo** (1 indicador, 2 médio, 3 anelar, 4 mínimo; cinza = corda solta).
+  Depois de tocada, a cor vira o **resultado**: verde (acertou), vermelho apagado (errou/perdeu). Texto "Perfeito!/Bom" sobe da nota.
+- **Bolinha**: pula em arco de uma nota à seguinte e cai no início de cada uma — mostra o ritmo antes de tocar.
+  No modo Espera ela fica quicando na nota-alvo até o acerto.
+- Rodapé: pausa · **barra da música inteira** (mini-mapa das notas, parte tocada colorida pelo resultado; tocar/arrastar = ir ao ponto).
+- Início com contagem de 1 compasso; fim com **resumo**: precisão %, 1–3 estrelas, melhor sequência, botões repetir / mais lento / mais rápido.
+
+**Motor (`src/engine`, sem UI)** — `PracticeSession(song, mode, speed)`
+- Estado por evento: `pending | hit | miss` (+ `timing: perfect | good` no Play-along); alvo atual; combo; melhor combo.
+- Entrada: `NotePlayed { time, midi }` vinda do áudio (ataque detectado + pitch estável).
+- **Espera**: alvo = primeiro evento pendente. Nota certa → `hit`, avança. Nota errada → conta erro do alvo, zera combo,
+  mostra o que foi tocado; **nunca avança sem acerto**. Precisão = alvos acertados na 1ª tentativa / total.
+- **Play-along (M5)**: relógio corre; janela ±80 ms = Perfeito, ±160 ms = Bom, senão `miss` quando a janela passa.
+- Estrelas: ≥ 60% = 1, ≥ 80% = 2, ≥ 95% = 3.
+
+**Dedo por nota**: `NoteRef.finger` (0–4). Vem da digitação anotada no alphaTex (`{lf 2}` = indicador; `lf 1` é o polegar); sem anotação, deduz:
+traste 0 → 0; trastes 1–4 → dedo = traste (1ª posição); acima disso, posição = menor traste do trecho.
+
+**Detecção de nota tocada (M3, implementado)**
+- Ataque (`NoteDetector`): salto do nível do bloco de ~11 ms (≥ 5 dB) ou do "clique" de alta frequência (≥ 9 dB, pico em
+  sub-blocos de 128 amostras). Pega notas repetidas a 0,2 s; a janela de 2048 amostras sozinha suavizava demais.
+- **Juiz do modo Espera (`WaitJudge`)** — sabe qual nota é esperada: após cada ataque mede a energia nos 6 primeiros
+  harmônicos da nota-alvo (Goertzel com janela Hann; 8192 amostras ≈ 170 ms abaixo do Mi3, 4096 acima) e exige
+  ≥ 20 % da energia e 2× a dos semitons vizinhos, por 2 frames. Motivo: com a corda anterior ainda soando (cordas soltas),
+  o detector de altura vê a mistura e erra; a checagem da nota-alvo não. Também aceita quando o detector de altura confirma
+  a nota (±1 oitava).
+- Um ataque gera no máximo um acerto (nota repetida exige novo ataque). "Errou" só conta para nota ligada a um ataque
+  e espera ~290 ms (a janela de confirmação) antes de valer; troca de altura sem ataque nunca é erro.

@@ -1,7 +1,7 @@
 import { useState } from 'preact/hooks';
 import { Home } from './Home';
 import { Library } from './Library';
-import { SongView } from './SongView';
+import { Practice } from './practice/Practice';
 import { Tuner } from './Tuner';
 import { usePitch } from './usePitch';
 
@@ -10,8 +10,8 @@ type Screen = { name: 'home' } | { name: 'tuner' } | { name: 'library' } | { nam
 export function App() {
   // The mic session lives here so it can be started inside the very tap that opens a screen
   // (iOS only allows audio to start from a user gesture) — no extra "activate" step.
-  const pitch = usePitch();
   const [screen, setScreen] = useState<Screen>({ name: 'home' });
+  const pitch = usePitch(screen.name === 'tuner');
   const home = () => setScreen({ name: 'home' });
 
   switch (screen.name) {
@@ -26,9 +26,26 @@ export function App() {
         />
       );
     case 'library':
-      return <Library onBack={home} onOpen={(id) => setScreen({ name: 'song', id })} />;
+      return (
+        <Library
+          onBack={home}
+          onOpen={(id) => {
+            pitch.start();
+            setScreen({ name: 'song', id });
+          }}
+        />
+      );
     case 'song':
-      return <SongView id={screen.id} onBack={() => setScreen({ name: 'library' })} />;
+      return (
+        <Practice
+          id={screen.id}
+          p={pitch}
+          onBack={() => {
+            pitch.stop();
+            setScreen({ name: 'library' });
+          }}
+        />
+      );
     default:
       return (
         <Home

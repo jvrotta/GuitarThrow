@@ -17,13 +17,16 @@ export interface PitchState {
   start(): void;
   stop(): void;
   record(seconds: number): Promise<Uint8Array<ArrayBuffer>>;
+  /** Subscribe to every analysis frame (~90×/s); returns unsubscribe. */
+  listen(fn: (f: PitchFrame) => void): () => void;
 }
 
 /**
  * Owns a PitchSession for a screen. Audio frames arrive ~90×/s; the UI re-renders once per
- * animation frame with the latest values. Stops when the app goes to background (iOS cuts the mic).
+ * animation frame with the latest values — only when `live` (the tuner); other screens use listen().
+ * Stops when the app goes to background (iOS cuts the mic).
  */
-export function usePitch(): PitchState {
+export function usePitch(live: boolean): PitchState {
   const [status, setStatus] = useState<MicStatus>('idle');
   const [error, setError] = useState('');
   const [info, setInfo] = useState<MicInfo | null>(null);
@@ -35,6 +38,7 @@ export function usePitch(): PitchState {
   const session = useRef<PitchSession | null>(null);
   const releaseLock = useRef<() => void>(() => {});
   const latest = useRef({ frame: null as PitchFrame | null, freq: null as number | null, count: 0 });
+  const listeners = useRef(new Set<(f: PitchFrame) => void>());
 
   const stop = () => {
     const s = session.current;
@@ -56,6 +60,7 @@ export function usePitch(): PitchState {
       l.frame = f;
       l.freq = smoother.push(f.freq);
       l.count++;
+      for (const fn of listeners.current) fn(f);
     })
       .then(async (s) => {
         session.current = s;
@@ -71,7 +76,7 @@ export function usePitch(): PitchState {
 
   // Render loop + fps counter while running.
   useEffect(() => {
-    if (status !== 'running') return;
+    if (status !== 'running' || !live) return;
     let raf = 0;
     let fps = 0;
     let t0 = performance.now();
@@ -87,7 +92,7 @@ export function usePitch(): PitchState {
     };
     raf = requestAnimationFrame(tick);
     return () => cancelAnimationFrame(raf);
-  }, [status]);
+  }, [status, live]);
 
   // Background → stop; unmount → stop.
   useEffect(() => {
@@ -106,6 +111,10 @@ export function usePitch(): PitchState {
     ...view,
     start,
     stop,
+    listen: (fn) => {
+      listeners.current.add(fn);
+      return () => listeners.current.delete(fn);
+    },
     record: (seconds) => session.current?.record(seconds) ?? Promise.reject(new Error('Microfone desligado.')),
   };
 }

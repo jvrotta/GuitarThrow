@@ -32,6 +32,8 @@ Para saber o que já existe, leia o **catálogo**, não os `.tex`. O id é o nom
 - Duração: `.4` semínima, `.8` colcheia, `.2` mínima, `.1` semibreve; `:4` define o padrão para as próximas.
   A duração de uma nota também vale para as seguintes até mudar.
 - Pontuada: `0.1.4{d}`. Pausa: `r.4`. Acorde: `(0.1 1.2 0.3).4`. Barra de compasso: `|`.
+- Dedo (opcional): `3.5{lf 2}` — no alphaTex `lf 1` é o polegar, então **`lf 2` = indicador**, 3 = médio, 4 = anelar, 5 = mínimo.
+  Sem anotação o build deduz (corda solta = 0; por compasso, a posição que cabe os trastes em 4 casas).
 - Sintaxe 1.9: **não** usar o separador `.` antigo depois dos metadados, nem `\staff {tabs}`.
 - Erros do script apontam `arquivo: linha:coluna` (linhas contadas sem os comentários).
 

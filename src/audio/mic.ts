@@ -1,4 +1,5 @@
-import workletUrl from './capture.worklet.js?url';
+// The worklet lives in public/ so it is served untouched (in dev, Vite would inject HMR code into it).
+const workletUrl = `${import.meta.env.BASE_URL}capture.worklet.js`;
 
 /** What the browser actually applied — iOS may ignore some constraints. */
 export interface MicInfo {

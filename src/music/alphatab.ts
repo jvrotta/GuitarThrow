@@ -1,6 +1,7 @@
 // Converts an alphaTab Score into our Song. Used at build time (scripts/build-content.mjs, via Node's
-// type stripping — so this file must only have type-only imports) and, in M6, at runtime for imported
+// type stripping — so runtime imports need the .ts extension) and, in M6, at runtime for imported
 // Guitar Pro / MusicXML files. Minimal structural types keep alphaTab out of the app bundle.
+import { assignFingers } from './fingering.ts';
 import type { NoteRef, Song, SongEvent, SongMeta } from './song';
 
 const TICKS_PER_BEAT = 960;
@@ -10,6 +11,8 @@ interface AtNote {
   fret: number;
   realValue: number;
   isTieDestination: boolean;
+  /** alphaTab Fingers: -2 unknown, -1 none, 0 thumb, 1 index … 4 little. alphaTex {lf 2} = index. */
+  leftHandFinger: number;
 }
 interface AtBeat {
   playbackStart: number;
@@ -38,12 +41,18 @@ export function scoreToSong(score: AtScore, meta: Omit<SongMeta, 'tempo' | 'titl
       const played = b.notes.filter((n) => !n.isTieDestination);
       if (played.length === 0) continue;
       const notes: NoteRef[] = played
-        .map((n) => ({ string: strings - n.string + 1, fret: n.fret, midi: n.realValue }))
+        .map((n) => ({
+          string: strings - n.string + 1,
+          fret: n.fret,
+          midi: n.realValue,
+          ...(n.leftHandFinger >= 1 ? { finger: n.leftHandFinger } : {}),
+        }))
         .sort((a, c) => a.string - c.string);
       events.push({ beat: (barStart + b.playbackStart) / TICKS_PER_BEAT, dur: b.playbackDuration / TICKS_PER_BEAT, notes });
     }
   });
   events.sort((a, b) => a.beat - b.beat);
+  assignFingers(events, score.masterBars.map((m) => m.start / TICKS_PER_BEAT));
 
   const mb = score.masterBars;
   const first = mb[0];

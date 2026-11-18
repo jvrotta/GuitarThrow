@@ -20,7 +20,8 @@
       "vite/client",
       "vite-plugin-pwa/client"
     ],
-    "resolveJsonModule": true
+    "resolveJsonModule": true,
+    "allowImportingTsExtensions": true
   },
   "include": [
     "src",

@@ -1,4 +1,4 @@
-/* Library, song view and controls (M2). Tokens come from styles.css. */
+/* Library, tab area and controls. Tokens come from styles.css; practice screen in practice/practice.css. */
 
 .hero-card.secondary { border-color: var(--line); background: var(--surface); box-shadow: none; }
 .hero-card.secondary .hero-icon { background: var(--surface-2); color: var(--accent); }
@@ -20,9 +20,7 @@
 .level i { width: 6px; height: 14px; border-radius: 3px; background: var(--line); }
 .level i.on { background: var(--accent); }
 
-/* ---------- Song view ---------- */
-.song-screen { height: 100dvh; display: grid; grid-template-rows: auto 1fr auto; padding: 4px 8px 8px; }
-.song-screen .bar h2 { overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+/* ---------- Tab area ---------- */
 .tab-area { position: relative; min-height: 0; display: grid; }
 .tab-canvas { width: 100%; height: 100%; min-height: 0; touch-action: none; display: block; }
 .rotate-hint {
@@ -35,19 +33,6 @@
 }
 
 .controls { display: flex; align-items: center; gap: 12px; padding: 8px 4px 0; }
-.play-btn {
-  width: 56px; height: 56px; flex: none; border: 0; border-radius: 50%; background: var(--accent); color: #1a1205;
-  font-size: 1.3rem; display: grid; place-items: center; box-shadow: 0 6px 20px -6px #f5a52499;
-}
-.play-btn:disabled { opacity: 0.5; }
 .chips { display: flex; gap: 6px; flex: 1; }
 .chip { border: 1px solid var(--line); background: none; border-radius: 999px; padding: 8px 12px; min-height: 40px; color: var(--muted); font-variant-numeric: tabular-nums; }
 .chip.on { border-color: var(--accent); color: var(--accent); background: #f5a5241a; }
-.bar-count { color: var(--muted); font-variant-numeric: tabular-nums; min-width: 44px; text-align: right; }
-
-@media (orientation: landscape) and (max-height: 500px) {
-  .song-screen { grid-template-rows: auto 1fr auto; padding: 0 8px 4px; }
-  .song-screen .bar { height: 40px; }
-  .controls { padding-top: 2px; }
-  .play-btn { width: 48px; height: 48px; }
-}

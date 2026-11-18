@@ -8,7 +8,7 @@ em dois modos: **Espera** (só avança ao acertar) e **Play-along** (no andament
 
 ## Estado atual
 
-Marco atual: **M2 — tab rolando pronta; aguardando teste no iPhone**. No ar: https://jvrotta.github.io/GuitarThrow/
+Marco atual: **M3 — sessão de prática (modo Espera) pronta; aguardando teste no iPhone**. No ar: https://jvrotta.github.io/GuitarThrow/
 
 ## Mapa — "preciso de X → abro Y"
 
@@ -19,13 +19,14 @@ Marco atual: **M2 — tab rolando pronta; aguardando teste no iPhone**. No ar: h
 | Formato das músicas e regras de conteúdo | `docs/CONTENT.md` |
 | Lista de músicas existentes (sem abrir cada uma) | `content/catalog.json` (gerado) |
 | Fonte de uma música / JSON gerado | `content/songs/<id>.tex` / `content/build/<id>.json` |
-| Microfone, pitch, ataque, acordes (chroma) | `src/audio/index.ts` |
+| Microfone, pitch, ataque, juiz do modo Espera, acordes (chroma) | `src/audio/index.ts` (worklet: `public/capture.worklet.js`) |
 | Modelo da música, nota↔MIDI↔corda/traste, importadores | `src/music/index.ts` |
-| Relógio, modos Espera/Play-along, pontuação | `src/engine/index.ts` |
+| Relógio, sessão de prática (Espera/Play-along), pontuação | `src/engine/index.ts` |
 | Telas e componentes | `src/ui/index.ts` |
-| Desenho da tab (canvas, geometria, cores) | `src/ui/tab/draw.ts`, `src/ui/tab/TabCanvas.tsx` |
+| Desenho da tab (canvas, geometria, cores, bolinha) | `src/ui/tab/geometry.ts`, `draw.ts`, `overlay.ts`, `TabCanvas.tsx` |
+| Tela de prática (HUD, mini-mapa, resumo) | `src/ui/practice/` |
 | Persistência (IndexedDB) | `src/storage/index.ts` |
-| Entrada do app e estilos (tokens / páginas / afinador) | `src/main.tsx`, `src/ui/styles.css`, `src/ui/pages.css`, `src/ui/tuner/tuner.css` |
+| Entrada do app e estilos (tokens / páginas / afinador / prática) | `src/main.tsx`, `src/ui/styles.css`, `src/ui/pages.css`, `src/ui/tuner/tuner.css`, `src/ui/practice/practice.css` |
 | Afinador: cabeça do violão (SVG) e medidor | `src/ui/tuner/Headstock.tsx`, `src/ui/tuner/Gauge.tsx` |
 | Scripts: conteúdo (alphaTex → JSON + catálogo), ícones | `scripts/build-content.mjs`, `scripts/gen-icons.mjs` |
 | Testes (Vitest) e áudios de teste (WAV) | `tests/`, `tests/fixtures/` |

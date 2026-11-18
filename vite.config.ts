@@ -10,10 +10,6 @@ export default defineConfig({
   define: {
     __BUILD_ID__: JSON.stringify((process.env.GITHUB_SHA ?? 'dev').slice(0, 7)),
   },
-  build: {
-    // AudioWorklet modules must be real files: Safari may refuse data: URLs in addModule().
-    assetsInlineLimit: (file) => (file.endsWith('.worklet.js') ? false : undefined),
-  },
   plugins: [
     preact(),
     VitePWA({

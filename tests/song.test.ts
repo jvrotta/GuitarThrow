@@ -19,10 +19,15 @@ describe('scoreToSong', () => {
   });
 
   it('keeps tab string numbering (1 = high E) and MIDI', () => {
-    expect(song.events[0]!.notes).toEqual([{ string: 6, fret: 0, midi: 40 }]);
-    expect(song.events[1]!.notes).toEqual([{ string: 5, fret: 3, midi: 48 }]);
+    expect(song.events[0]!.notes).toEqual([{ string: 6, fret: 0, midi: 40, finger: 0 }]);
+    expect(song.events[1]!.notes).toEqual([{ string: 5, fret: 3, midi: 48, finger: 3 }]);
     expect(song.events[2]!.notes.map((n) => n.string)).toEqual([1, 2]);
     expect(song.tuning).toEqual([40, 45, 50, 55, 59, 64]);
+  });
+
+  it('keeps explicit fingering ({lf 2} = index) and deduces the rest', () => {
+    const s = scoreToSong(alphaTab.importer.ScoreLoader.loadAlphaTex(':4 3.5{lf 2} 4.5 6.5'), { id: 'f', kind: 'exercise', level: 1, source: 't' });
+    expect(s.events.map((e) => e.notes[0]!.finger)).toEqual([1, 2, 4]);
   });
 
   it('uses absolute beats across bars and skips rests', () => {
