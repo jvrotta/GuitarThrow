@@ -78,7 +78,7 @@ Cada marco é pequeno, testável no celular e útil sozinho. O afinador vem prim
 | Repositório | **Git**, com navegação por `CLAUDE.md` (mapa) → `docs/ROADMAP.md` → `index.ts` de cada módulo | Nenhuma tarefa precisa ler o repo inteiro nem o histórico do chat. Comandos `/proximo`, `/fechar`, `/musica`, `/bug`. |
 | Hospedagem | **Repositório público + GitHub Pages**, deploy por GitHub Actions a cada push na `main` | URL `https://<usuario>.github.io/<repo>/`; o `base` do Vite vem do nome do repo no workflow. **Settings → Pages → Source tem que ser "GitHub Actions"**: em "Deploy from a branch" o deploy da branch roda depois e publica os fontes crus (página em branco). |
 | Afinador (2º feedback, referência de app de afinador com cabeça do violão) | **Cabeça do violão 3+3** (Ré/Lá/Mi à esquerda, Sol/Si/Mi à direita, como visto de frente): a tarraxa, a corda e o rótulo da corda tocada acendem; **medidor com ponteiro vertical** e ♭/♯; texto "Aperte/Afrouxe". Mantidos: auto + trava (toque no rótulo; chip "Auto" destrava), cents contra a corda solta, ✓ por corda, mic no toque. Visual próprio (SVG desenhado aqui), sem copiar o app de referência. | Padrão de UX para as próximas telas: zero passos extras, pouco texto, alvos de toque ≥ 44 px, layouts próprios para retrato e paisagem. |
-| Detecção no modo Espera (M3) | Juiz **orientado ao alvo** (harmônicos da nota esperada vs. semitons vizinhos) + ataque; detector de altura só para "você tocou X" e legato. Detalhes em §9. | Detector genérico de altura falhava com cordas soando juntas (teste sintético e navegador). Base pronta para acordes no M4 (checar várias notas-alvo). |
+| Detecção no modo Espera (M3, revisada 2026-11-18) | Juiz **espectral sobre o som novo** (depois − antes de cada ataque): harmônicos destacados, energia explicada − não explicada, afinação estável. O detector de altura (pitchy) ficou só no afinador. Detalhes em §9. | 1ª versão (energia nos harmônicos do alvo + pitchy) aceitava quinta/oitava e transformava batidas e fala em notas (relato do usuário; reproduzido em 8/16 cenários realistas). FFT própria (sem dependência nova). Base para acordes no M4. |
 | Worklet do microfone | `public/capture.worklet.js`, carregado por `BASE_URL` | Em `npm run dev` o Vite injetava código de hot-reload no worklet e o microfone falhava ("node name 'capture' is not defined"). |
 | Padrões assumidos | Interface em pt-BR e código em inglês; dados só no aparelho (sem login); tema escuro; Play-along começa só com metrônomo (som de referência sintetizado avaliado no M5) | Pode ser revisto a qualquer momento. |
 
@@ -143,10 +143,19 @@ traste 0 → 0; trastes 1–4 → dedo = traste (1ª posição); acima disso, po
 **Detecção de nota tocada (M3, implementado)**
 - Ataque (`NoteDetector`): salto do nível do bloco de ~11 ms (≥ 5 dB) ou do "clique" de alta frequência (≥ 9 dB, pico em
   sub-blocos de 128 amostras). Pega notas repetidas a 0,2 s; a janela de 2048 amostras sozinha suavizava demais.
-- **Juiz do modo Espera (`WaitJudge`)** — sabe qual nota é esperada: após cada ataque mede a energia nos 6 primeiros
-  harmônicos da nota-alvo (Goertzel com janela Hann; 8192 amostras ≈ 170 ms abaixo do Mi3, 4096 acima) e exige
-  ≥ 20 % da energia e 2× a dos semitons vizinhos, por 2 frames. Motivo: com a corda anterior ainda soando (cordas soltas),
-  o detector de altura vê a mistura e erra; a checagem da nota-alvo não. Também aceita quando o detector de altura confirma
-  a nota (±1 oitava).
+- **Juiz do modo Espera (`WaitJudge`, refeito em 2026-11-18 após o teste no iPhone)** — trabalha só com o som **novo**:
+  em cada ataque congela o espectro de antes (FFT 8192 ≈ 170 ms, Hann) e, nos ~30 quadros seguintes, analisa
+  `depois − antes`. Cordas que continuam soando somem dessa diferença. Para cada nota candidata (Mi2–Mi6):
+  - ≥ 3 dos 6 primeiros harmônicos **destacados** (10× o ruído de fundo da faixa e 4× os bins vizinhos) — batida/zumbido têm 1 pico;
+  - **pontuação = energia explicada − não explicada** na faixa da nota (0,5·f0 até o 10º harmônico) e harmonicidade ≥ 60 %:
+    palma (ruído largo) fica negativa; um harmônico tomado pela nota (quinta/oitava acima) deixa a fundamental sem explicação;
+  - harmônicos ímpares presentes (senão é a oitava acima disfarçada);
+  - **afinação estável**: ≤ 5 cents de variação por quadro durante 3 quadros e ≤ 25 cents da nota (corda acima disso → afinar).
+    A voz desliza; a corda não.
+  Acerto = alvo estável com ≥ 70 % da pontuação da melhor candidata. Erro = outra nota vence ≥ 4 quadros estáveis com
+  afinação variando ≤ 10 cents. Ataque exige subida em ≤ 32 ms (`JUDGE_ONSET`): sílabas de fala sobem devagar.
+  Um ataque < 170 ms após outro não pode repetir a nota anterior (ela ainda está entrando na janela).
+  Limite conhecido: uma vogal sustentada exatamente no tom da nota-alvo equivale a cantá-la e conta.
+  Testes com áudio realista (`tests/synth.ts`: corda Karplus–Strong, mic de celular, ruído ambiente, palmas, batidas, fala).
 - Um ataque gera no máximo um acerto (nota repetida exige novo ataque). "Errou" só conta para nota ligada a um ataque
   e espera ~290 ms (a janela de confirmação) antes de valer; troca de altura sem ataque nunca é erro.

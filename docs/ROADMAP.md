@@ -4,9 +4,9 @@
 
 ## Próximo passo
 
-1. **Usuário**: testar o M3 no iPhone — Músicas → "Cordas soltas" (deixe as cordas soando), "Cromático" (notas repetidas
-   e dedos), tocar uma nota errada de propósito; ver se algum acerto falha ou se aparece erro sem ter errado.
-   Se falhar, gravar 5 s no painel de debug do afinador e mandar o WAV.
+1. **Usuário**: testar de novo no iPhone o juiz refeito — "Cordas soltas" (deixe soar), "Cromático", uma nota errada,
+   e ruídos (bater no corpo do violão, palmas, falar perto). Se algo falhar, gravar 5 s no painel de debug do afinador
+   e mandar o WAV (vira fixture em `tests/fixtures/`).
 2. M4 — Modo Espera com acordes (o juiz já checa várias notas-alvo; falta exigir o acorde inteiro).
 
 ## Marcos
@@ -40,6 +40,8 @@
 - [x] Modelo: `finger` por nota (alphaTex `{lf 2}` = indicador + dedução por compasso)
 - [x] Áudio: detector de ataque (bloco de 11 ms + clique de alta frequência) + `NotePlayed`; notas repetidas a 0,2 s
 - [x] Áudio: `WaitJudge` orientado à nota-alvo (funciona com cordas anteriores soando)
+- [x] Áudio: juiz refeito após o 1º teste no iPhone (ruído virava nota, quinta/oitava aceitas): espectro do som novo,
+      harmônicos destacados, afinação estável; 21 cenários com áudio realista
 - [x] Engine: `PracticeSession` (Espera): contagem de 1 compasso, alvo, hit/erro, combo, precisão, estrelas, seek
 - [x] Tela de prática: pílulas por dedo/resultado, bolinha, HUD, "Você tocou X", mini-mapa, resumo; verificada com som simulado
 - [ ] Teste no iPhone (usuário)
@@ -68,6 +70,7 @@
 
 ## Histórico (1 linha por tarefa, mais recente no topo)
 
+- 2026-11-18 — Juiz do modo Espera refeito (relato: ruído virava nota, notas confundidas): análise espectral do som novo após cada ataque, harmônicos destacados, afinação estável; áudio de teste realista (Karplus–Strong, mic de celular, palmas, batidas, fala); 61 testes; verificado no navegador.
 - 2026-11-18 — M3: sessão de prática no modo Espera (juiz pela nota-alvo, ataque de 11 ms, dedos, bolinha, mini-mapa, resumo); 46 testes; verificado no navegador com som simulado. Corrigido mic no `npm run dev` (worklet em public/).
 - 2026-11-18 — Lógica de tocar repensada (referência de app de ensino): sessão de prática, pílulas por dedo, bolinha, precisão + combo (DESIGN §9).
 - 2026-11-18 — Afinador refeito com cabeça do violão 3+3 e medidor de ponteiro (feedback: pouco intuitivo); verificado em retrato/paisagem.

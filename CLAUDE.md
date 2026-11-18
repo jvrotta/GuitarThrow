@@ -8,7 +8,7 @@ em dois modos: **Espera** (só avança ao acertar) e **Play-along** (no andament
 
 ## Estado atual
 
-Marco atual: **M3 — sessão de prática (modo Espera) pronta; aguardando teste no iPhone**. No ar: https://jvrotta.github.io/GuitarThrow/
+Marco atual: **M3 — modo Espera com juiz refeito (ruído/confusão de notas); aguardando novo teste no iPhone**. No ar: https://jvrotta.github.io/GuitarThrow/
 
 ## Mapa — "preciso de X → abro Y"
 
@@ -29,7 +29,7 @@ Marco atual: **M3 — sessão de prática (modo Espera) pronta; aguardando teste
 | Entrada do app e estilos (tokens / páginas / afinador / prática) | `src/main.tsx`, `src/ui/styles.css`, `src/ui/pages.css`, `src/ui/tuner/tuner.css`, `src/ui/practice/practice.css` |
 | Afinador: cabeça do violão (SVG) e medidor | `src/ui/tuner/Headstock.tsx`, `src/ui/tuner/Gauge.tsx` |
 | Scripts: conteúdo (alphaTex → JSON + catálogo), ícones | `scripts/build-content.mjs`, `scripts/gen-icons.mjs` |
-| Testes (Vitest) e áudios de teste (WAV) | `tests/`, `tests/fixtures/` |
+| Testes (Vitest), gerador de áudio realista e áudios de teste (WAV) | `tests/`, `tests/synth.ts`, `tests/fixtures/` |
 | Config: Vite + PWA (manifest), TypeScript | `vite.config.ts`, `tsconfig.json` |
 | Deploy (GitHub Pages via Actions) | `.github/workflows/deploy.yml` |
 | Ícones gerados | `public/icons/` (via `npm run icons`) |
