@@ -11,6 +11,8 @@
    - Play-along: "Cordas soltas" a 50 % e 100 % (Perfeito/Bom, adiantado/atrasado, clique do metrônomo audível?),
      "Ritmo: Lá menor, Dó, Sol, Ré"; loop A–B; resumo e estrelas na biblioteca; "Continuar" na tela inicial.
    - Importar: colar uma tab em texto; abrir um arquivo .gp (se tiver).
+   - Rock: "Power Chords: E5, A5, D5" e "Garagem" (Espera e Play-along); se puder, gravar 5 s de um power chord
+     batido em colcheias e de um Lá grave repetido (casos fracos do juiz, ver Problemas conhecidos).
    Se algo falhar: gravar 5 s no painel de debug do afinador e mandar o WAV (vira fixture em `tests/fixtures/`).
 2. Ajustar o que o teste mostrar; depois ampliar a biblioteca de domínio público (M6).
 
@@ -64,7 +66,8 @@
 - [ ] Teste no iPhone (usuário)
 
 ### M6 — Conteúdo e progresso
-- [ ] Biblioteca de domínio público ampliada
+- [x] Estante Rock (7 peças originais: Iniciante 3, Médio 2, Avançado 2) + teste que "toca" cada uma com áudio sintético
+- [ ] Biblioteca de domínio público ampliada; outras estantes (blues, MPB/folk tradicional…)
 - [x] Importadores: tab em texto (parser próprio), Guitar Pro / MusicXML (alphaTab sob demanda); apagar importada
 - [x] Progresso por música (melhor por modo, estrelas na biblioteca), "Continuar", tela Ajustes
 
@@ -76,6 +79,8 @@
 - iOS ignora `orientation` do manifest: a tela da música mostra "Gire o celular" em retrato.
 - `npm audit` acusa ReDoS em `picomatch`/`minimatch`/`glob` via vite/vitest/vite-plugin-pwa: só ferramentas de build,
   nada vai para o app publicado. Reavaliar ao atualizar dependências.
+- Juiz: nota grave ou power chord **batido de novo enquanto ainda soa** às vezes não é reconhecido (som novo pequeno;
+  ex.: Lá solto repetido ouvido como Mi agudo). As peças evitam o caso; corrigir com gravações reais do iPhone.
 - Painel do navegador oculto (Claude Code) estrangula a animação: o Play-along só foi verificado por teste de integração
   e a calibração com som simulado; o tempo real precisa do teste no iPhone.
 - Importar Guitar Pro/MusicXML precisa de internet na 1ª vez (alphaTab fica fora do precache).
@@ -84,6 +89,7 @@
 
 ## Histórico (1 linha por tarefa, mais recente no topo)
 
+- 2026-11-18 — Estante Rock por nível (7 peças originais) + teste de "execução" sintética de cada peça; corrigido o rastreador de acordes que zerava no Play-along ao mudar os candidatos; 95 testes.
 - 2026-11-18 — M4/M5/M6 sem violão: acordes no modo Espera, Play-along (Perfeito/Bom, metrônomo, contagem, loop A–B), calibração, Ajustes, progresso + "Continuar", importação (texto, GP/MusicXML sob demanda); 87 testes; verificado no navegador com som simulado.
 - 2026-11-18 — Juiz do modo Espera refeito (relato: ruído virava nota, notas confundidas): análise espectral do som novo após cada ataque, harmônicos destacados, afinação estável; áudio de teste realista (Karplus–Strong, mic de celular, palmas, batidas, fala); 61 testes; verificado no navegador.
 - 2026-11-18 — M3: sessão de prática no modo Espera (juiz pela nota-alvo, ataque de 11 ms, dedos, bolinha, mini-mapa, resumo); 46 testes; verificado no navegador com som simulado. Corrigido mic no `npm run dev` (worklet em public/).

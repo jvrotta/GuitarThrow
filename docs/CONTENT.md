@@ -18,7 +18,8 @@ Para saber o que já existe, leia o **catálogo**, não os `.tex`. O id é o nom
 ## Formato do arquivo (alphaTab 1.9)
 
 ```
-// @kind exercise            ← exercise | song (obrigatório)
+// @kind exercise            ← exercise | chords | song (obrigatório)
+// @genre rock               ← opcional: estante de estilo na biblioteca, dividida por nível
 // @level 1                  ← 1 a 5 (obrigatório)
 // @source Exercício original ← origem/direitos (obrigatório)
 // Qualquer outro comentário // é ignorado.
@@ -37,6 +38,19 @@ Para saber o que já existe, leia o **catálogo**, não os `.tex`. O id é o nom
 - Sintaxe 1.9: **não** usar o separador `.` antigo depois dos metadados, nem `\staff {tabs}`.
 - Erros do script apontam `arquivo: linha:coluna` (linhas contadas sem os comentários).
 
+- Nome de acorde (opcional): efeito de batida **depois da duração**: `(0.6 2.5).4{ch "E5"}`, `0.5.8{ch "Am"}`.
+
+## O que o juiz consegue avaliar (escrever para ele)
+
+- Cada nota precisa de **ataque próprio** (palhetada): sem hammer-on, pull-off, slide nem bend.
+- Evitar o **mesmo acorde batido várias vezes seguidas** em colcheias e a mesma nota grave repetida enquanto soa:
+  o "som novo" fica pequeno e o juiz às vezes perde (ver ROADMAP). Alternar acordes ou "chug" na corda solta funciona.
+- Toda peça nova de `content/build/rock-*.json` passa por `tests/rock-songs.test.ts`: uma execução sintética no
+  tempo precisa ter ≥ 95 % das notas reconhecidas no Play-along. Para outra estante, estender o teste.
+
 ## Biblioteca atual
 
-Ver `content/catalog.json`. Níveis: 1 = primeiras aulas (cordas soltas, 4 dedos), 2 = primeira posição com melodia.
+Ver `content/catalog.json`. Níveis: 1 = primeiras aulas (cordas soltas, 4 dedos), 2 = primeira posição com melodia
+ou power chords móveis, 3 = riffs com troca de posição / pentatônica, 4–5 = pestana, arpejos, solo pelo braço.
+Na biblioteca, uma estante de estilo (`@genre`) agrupa: Iniciante = 1–2, Médio = 3, Avançado = 4–5.
+**Rock**: só composições originais no estilo (riffs, power chords, pentatônica); rock famoso é protegido — o usuário importa.

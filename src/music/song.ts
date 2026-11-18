@@ -33,6 +33,8 @@ export interface SongMeta {
   source: string;
   /** Beats per minute (quarter note). */
   tempo: number;
+  /** Style shelf in the library (e.g. "rock"); none = the generic group of its kind. */
+  genre?: string;
 }
 
 export interface Song extends SongMeta {

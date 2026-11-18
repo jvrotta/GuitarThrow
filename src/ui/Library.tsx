@@ -8,6 +8,14 @@ const GROUPS: { kind: CatalogEntry['kind']; title: string }[] = [
   { kind: 'song', title: 'Músicas' },
 ];
 
+/** Style shelves, split by level band. */
+const GENRES: { genre: string; title: string }[] = [{ genre: 'rock', title: 'Rock' }];
+const BANDS: { title: string; has: (level: number) => boolean }[] = [
+  { title: 'Iniciante', has: (l) => l <= 2 },
+  { title: 'Médio', has: (l) => l === 3 },
+  { title: 'Avançado', has: (l) => l >= 4 },
+];
+
 interface Item {
   id: string;
   title: string;
@@ -77,8 +85,26 @@ export function Library({ onOpen, onBack, onImport }: Props) {
         <h2>Músicas</h2>
         <button class="icon-btn" onClick={onImport} aria-label="Importar tab">＋</button>
       </header>
+      {GENRES.map((g) => {
+        const items = catalog.filter((e) => e.genre === g.genre);
+        if (!items.length) return null;
+        return (
+          <section key={g.genre} class="lib-group">
+            <h3>{g.title}</h3>
+            {BANDS.map((b) => {
+              const band = items.filter((e) => b.has(e.level));
+              return band.length ? (
+                <div key={b.title} class="lib-band">
+                  <h4>{b.title}</h4>
+                  {band.map((e) => row(entryItem(e)))}
+                </div>
+              ) : null;
+            })}
+          </section>
+        );
+      })}
       {GROUPS.map((g) => {
-        const items = catalog.filter((e) => e.kind === g.kind);
+        const items = catalog.filter((e) => e.kind === g.kind && !e.genre);
         if (!items.length) return null;
         return (
           <section key={g.kind} class="lib-group">

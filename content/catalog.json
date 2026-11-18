@@ -30,6 +30,28 @@
     "bars": 6
   },
   {
+    "id": "rock-power-chords-mi-la-re",
+    "kind": "song",
+    "level": 1,
+    "source": "Composição original (estilo rock)",
+    "title": "Power Chords: E5, A5, D5",
+    "tempo": 70,
+    "genre": "rock",
+    "notes": 17,
+    "bars": 7
+  },
+  {
+    "id": "rock-primeiro-riff",
+    "kind": "song",
+    "level": 1,
+    "source": "Composição original (estilo rock)",
+    "title": "Primeiro Riff",
+    "tempo": 80,
+    "genre": "rock",
+    "notes": 30,
+    "bars": 8
+  },
+  {
     "id": "acordes-sol-do-re",
     "kind": "chords",
     "level": 2,
@@ -50,6 +72,17 @@
     "bars": 4
   },
   {
+    "id": "rock-garagem",
+    "kind": "song",
+    "level": 2,
+    "source": "Composição original (estilo rock)",
+    "title": "Garagem",
+    "tempo": 90,
+    "genre": "rock",
+    "notes": 44,
+    "bars": 8
+  },
+  {
     "id": "ode-a-alegria",
     "kind": "song",
     "level": 2,
@@ -57,6 +90,28 @@
     "title": "Ode à Alegria",
     "tempo": 100,
     "notes": 30,
+    "bars": 8
+  },
+  {
+    "id": "rock-estrada",
+    "kind": "song",
+    "level": 3,
+    "source": "Composição original (estilo rock)",
+    "title": "Estrada",
+    "tempo": 95,
+    "genre": "rock",
+    "notes": 41,
+    "bars": 8
+  },
+  {
+    "id": "rock-pentatonica-em-la",
+    "kind": "song",
+    "level": 3,
+    "source": "Composição original (estilo rock)",
+    "title": "Pentatônica em Lá",
+    "tempo": 80,
+    "genre": "rock",
+    "notes": 44,
     "bars": 8
   },
   {
@@ -68,5 +123,27 @@
     "tempo": 70,
     "notes": 17,
     "bars": 5
+  },
+  {
+    "id": "rock-arpejo-eletrico",
+    "kind": "song",
+    "level": 4,
+    "source": "Composição original (estilo rock)",
+    "title": "Arpejo Elétrico",
+    "tempo": 90,
+    "genre": "rock",
+    "notes": 57,
+    "bars": 8
+  },
+  {
+    "id": "rock-solo-na-estrada",
+    "kind": "song",
+    "level": 5,
+    "source": "Composição original (estilo rock)",
+    "title": "Solo na Estrada",
+    "tempo": 100,
+    "genre": "rock",
+    "notes": 53,
+    "bars": 9
   }
 ]

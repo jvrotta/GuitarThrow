@@ -49,13 +49,22 @@ export function ownPartials(group: readonly number[]): Map<number, number> {
  */
 export class ChordTracker {
   private runs: number[] = [];
+  private keys: string[] = [];
   private own: Map<number, number>[] = [];
   /** Best attempt since the last reset (for "faltou Sol" feedback). */
   best: ChordAttempt | null = null;
 
   setGroups(groups: readonly (readonly number[])[]): void {
+    // Play-along: the candidate list changes while a strum is being decided (the next note comes into
+    // the window). A chord still in the list keeps its run of steady frames, so it is not reset mid-decision.
+    const key = (g: readonly number[]) => g.join(',');
+    const run = new Map(this.keys.map((k, i) => [k, this.runs[i] ?? 0]));
+    const best = this.best && this.keys[this.best.group];
+    this.keys = groups.map(key);
     this.own = groups.map((g) => (g.length > 1 ? ownPartials(g) : new Map()));
-    this.reset();
+    this.runs = this.keys.map((k) => run.get(k) ?? 0);
+    const b = best ? this.keys.indexOf(best) : -1;
+    this.best = b >= 0 && this.best ? { ...this.best, group: b } : null;
   }
 
   reset(): void {
