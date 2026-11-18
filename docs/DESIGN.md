@@ -87,6 +87,12 @@ Cada marco é pequeno, testável no celular e útil sozinho. O afinador vem prim
 | `vite`, `@preact/preset-vite`, `typescript` | Build e dev server |
 | `vite-plugin-pwa` | Gera manifest e service worker com precache dos assets com hash (offline) |
 | `vitest` | Testes com a mesma config do Vite |
+| `pitchy` | Detecção de pitch MPM (McLeod) com autocorrelação via FFT; pequeno, sem dependências. Obs.: o `clarityThreshold` dele é o *k* do MPM, não um limiar de rejeição — a rejeição é nossa (`minClarity`). |
+
+### Parâmetros do analisador (M1, `src/audio/analyzer.ts`)
+
+Janela 2048 amostras, salto 512 (~90 análises/s a 48 kHz), faixa 70–1400 Hz, clareza ≥ 0,9, volume ≥ −55 dB,
+mediana de 5 no afinador. Ajustar com dados reais do iPhone (painel de debug + gravações WAV).
 
 ### Formato de autoria das músicas
 

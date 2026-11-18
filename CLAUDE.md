@@ -8,7 +8,7 @@ em dois modos: **Espera** (só avança ao acertar) e **Play-along** (no andament
 
 ## Estado atual
 
-Marco atual: **M0 — código pronto; falta o primeiro deploy no GitHub Pages**. Próximo passo e pendências: `docs/ROADMAP.md`.
+Marco atual: **M1 — afinador pronto; aguardando validação no iPhone**. No ar: https://jvrotta.github.io/GuitarThrow/
 
 ## Mapa — "preciso de X → abro Y"
 

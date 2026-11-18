@@ -4,4 +4,13 @@
  * and importers (alphaTex, Guitar Pro / MusicXML via alphaTab, text tab).
  * Done: note utilities (M0). Planned: model (M2), importers (M6).
  */
-export { STANDARD_TUNING, midiToFreq, freqToMidi, midiToName, centsOff, stringFretToMidi } from './notes';
+export {
+  STANDARD_TUNING,
+  midiToFreq,
+  freqToMidi,
+  midiToName,
+  midiToSolfege,
+  nearestString,
+  centsOff,
+  stringFretToMidi,
+} from './notes';

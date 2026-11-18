@@ -4,9 +4,12 @@
 
 ## Próximo passo
 
-1. **Usuário**: criar repositório público vazio no GitHub, fazer o push da `main` e em
-   *Settings → Pages → Source* escolher **GitHub Actions**. Abrir a URL no iPhone e "Adicionar à Tela de Início".
-2. Depois: M1 — afinador + painel de debug.
+1. **Usuário — validar o M1 no iPhone** (https://jvrotta.github.io/GuitarThrow/, instalado na Tela de Início):
+   - Afinador → Ativar microfone → tocar cada corda solta (6ª a 1ª), uma por vez.
+   - Abrir "Debug" e anotar: frames/s, latência base, linha "Eco / ruído / ganho" e se a nota fica estável.
+   - Testar a 6ª corda (Mi grave) com atenção: se aparecer Mi uma oitava acima ou a nota pular, relatar.
+   - Gravar 5 s de cada corda solta → "Salvar" → enviar os WAV para `tests/fixtures/` (viram testes).
+2. Ajustar parâmetros do analisador com esses dados, se preciso; depois M2 — tab rolando.
 
 ## Marcos
 
@@ -15,13 +18,14 @@
 - [x] Manifest PWA + service worker (offline), ícones (`npm run icons`), orientação paisagem
 - [x] Pastas `src/{audio,music,engine,ui,storage}` com `index.ts` comentado; utilitários de nota + testes
 - [x] Workflow `.github/workflows/deploy.yml` (testa, builda com `BASE_PATH=/<repo>/`, publica no Pages)
-- [ ] Primeiro deploy no ar e app instalado no iPhone (depende do repo no GitHub)
+- [x] Primeiro deploy no ar: https://jvrotta.github.io/GuitarThrow/ (repo `jvrotta/GuitarThrow`)
+- [ ] App instalado no iPhone (usuário)
 
 ### M1 — Afinador + painel de debug
-- [ ] Captura do mic (AudioWorklet, sem eco/ruído/ganho automático)
-- [ ] Detecção de pitch (`pitchy`) + nota/cents na tela
-- [ ] Painel de debug: Hz, cents, clareza, energia
-- [ ] Gravar amostra no painel e exportar WAV (vira fixture de teste)
+- [x] Captura do mic (AudioWorklet em arquivo próprio, sem eco/ruído/ganho automático)
+- [x] Detecção de pitch (`pitchy`) + nota (solfejo e cifra), cents, corda mais próxima; testes com sinais sintéticos das 6 cordas
+- [x] Painel de debug: Hz bruto, clareza, dB, aceito, frames/s, taxa, latência, processamento aplicado
+- [x] Gravar 5 s no painel e salvar WAV (Compartilhar no iOS)
 - [ ] Validação no iPhone (feita pelo usuário)
 
 ### M2 — Tab rolando
@@ -49,6 +53,8 @@
 
 ## Problemas conhecidos
 
+- Não validado em iPhone real ainda (só Chromium com oscilador no lugar do mic).
+- Ao voltar do segundo plano o microfone é desligado de propósito; o usuário toca "Ativar" de novo.
 - iOS ignora `orientation` do manifest: telas de prática precisarão de aviso "gire o celular" (M2).
 - `npm audit` acusa ReDoS em `picomatch`/`minimatch`/`glob` via vite/vitest/vite-plugin-pwa: só ferramentas de build,
   nada vai para o app publicado. Reavaliar ao atualizar dependências.
@@ -56,6 +62,8 @@
 
 ## Histórico (1 linha por tarefa, mais recente no topo)
 
+- 2026-11-18 — M1: afinador + painel de debug + gravação WAV; verificado no navegador com som simulado (A2 +7 cents, E2 afinado, ~90 frames/s).
+- 2026-11-17 — Remoto `origin` configurado, push da `main`, primeiro deploy no Pages verificado (versão 1f2780a).
 - 2026-11-17 — M0: esqueleto Vite+TS+Preact+PWA, ícones, utilitários de nota com testes, workflow do GitHub Pages.
 
 - 2026-11-17 — Esboço do projeto, decisões iniciais e estrutura de navegação (CLAUDE.md, docs/, comandos).

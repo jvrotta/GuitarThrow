@@ -12,6 +12,23 @@ export function freqToMidi(freq: number): number {
   return 69 + 12 * Math.log2(freq / 440);
 }
 
+const SOLFEGE = ['Dó', 'Dó#', 'Ré', 'Ré#', 'Mi', 'Fá', 'Fá#', 'Sol', 'Sol#', 'Lá', 'Lá#', 'Si'] as const;
+
+/** "Mi", "Lá#"... (no octave). */
+export function midiToSolfege(midi: number): string {
+  const m = Math.round(midi);
+  return SOLFEGE[((m % 12) + 12) % 12]!;
+}
+
+/** Open string (1..6) whose pitch is closest to the given fractional MIDI number. */
+export function nearestString(midi: number, tuning: readonly number[] = STANDARD_TUNING): number {
+  let best = 0;
+  tuning.forEach((open, i) => {
+    if (Math.abs(open - midi) < Math.abs(tuning[best]! - midi)) best = i;
+  });
+  return tuning.length - best;
+}
+
 /** "E2", "A#3"... */
 export function midiToName(midi: number): string {
   const m = Math.round(midi);
