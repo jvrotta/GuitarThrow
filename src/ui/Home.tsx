@@ -1,11 +1,11 @@
-import { Logo, TunerIcon } from './icons';
+import { Logo, MusicIcon, TunerIcon } from './icons';
 
 const SOON = [
-  { title: 'Praticar', text: 'Modo Espera e Play-along com a tab rolando' },
-  { title: 'Músicas', text: 'Exercícios e músicas de domínio público' },
+  { title: 'Modo Espera', text: 'Só avança quando você acerta a nota' },
+  { title: 'Play-along', text: 'Toque junto no andamento, com pontuação' },
 ];
 
-export function Home({ onTuner }: { onTuner: () => void }) {
+export function Home({ onTuner, onLibrary }: { onTuner: () => void; onLibrary: () => void }) {
   return (
     <main class="home">
       <header class="brand">
@@ -17,7 +17,18 @@ export function Home({ onTuner }: { onTuner: () => void }) {
       </header>
 
       <div class="home-body">
-        <button class="hero-card" onClick={onTuner}>
+        <button class="hero-card" onClick={onLibrary}>
+          <span class="hero-icon">
+            <MusicIcon />
+          </span>
+          <span class="hero-text">
+            <strong>Músicas</strong>
+            <span>Exercícios e músicas com a tab rolando</span>
+          </span>
+          <span class="chevron">›</span>
+        </button>
+
+        <button class="hero-card secondary" onClick={onTuner}>
           <span class="hero-icon">
             <TunerIcon />
           </span>

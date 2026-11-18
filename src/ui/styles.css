@@ -81,7 +81,8 @@ button { font: inherit; color: inherit; cursor: pointer; }
   display: grid; grid-template-rows: auto auto 1fr; gap: 8px; padding: 4px 12px 12px;
   grid-template-areas: 'bar' 'readout' 'strings';
 }
-.bar { grid-area: bar; display: flex; align-items: center; justify-content: space-between; }
+.tuner-screen .bar { grid-area: bar; }
+.bar { display: flex; align-items: center; justify-content: space-between; }
 .bar h2 { margin: 0; font-size: 1.05rem; font-weight: 600; }
 .icon-btn { width: 44px; height: 44px; display: grid; place-items: center; border: 0; border-radius: 12px; background: none; font-size: 1.9rem; line-height: 1; color: var(--muted); }
 .icon-btn svg { width: 22px; height: 22px; }

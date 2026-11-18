@@ -88,6 +88,7 @@ Cada marco é pequeno, testável no celular e útil sozinho. O afinador vem prim
 | `vite`, `@preact/preset-vite`, `typescript` | Build e dev server |
 | `vite-plugin-pwa` | Gera manifest e service worker com precache dos assets com hash (offline) |
 | `vitest` | Testes com a mesma config do Vite |
+| `@coderline/alphatab` (dev) | Só no build: lê alphaTex (e, no M6, Guitar Pro/MusicXML sob demanda). Não entra no bundle. Armadilhas: `note.string` 1 = corda **mais grave**; `beat.playbackStart` é **relativo ao compasso** (somar `masterBar.start`); 960 ticks por semínima. Tudo isso fica isolado em `src/music/alphatab.ts`. |
 | `pitchy` | Detecção de pitch MPM (McLeod) com autocorrelação via FFT; pequeno, sem dependências. Obs.: o `clarityThreshold` dele é o *k* do MPM, não um limiar de rejeição — a rejeição é nossa (`minClarity`). |
 
 ### Parâmetros do analisador (M1, `src/audio/analyzer.ts`)

@@ -8,7 +8,7 @@ em dois modos: **Espera** (só avança ao acertar) e **Play-along** (no andament
 
 ## Estado atual
 
-Marco atual: **M1 — afinador redesenhado; aguardando aprovação no iPhone**. No ar: https://jvrotta.github.io/GuitarThrow/
+Marco atual: **M2 — tab rolando pronta; aguardando teste no iPhone**. No ar: https://jvrotta.github.io/GuitarThrow/
 
 ## Mapa — "preciso de X → abro Y"
 
@@ -18,21 +18,22 @@ Marco atual: **M1 — afinador redesenhado; aguardando aprovação no iPhone**. 
 | Arquitetura, riscos técnicos, decisões e o porquê delas | `docs/DESIGN.md` |
 | Formato das músicas e regras de conteúdo | `docs/CONTENT.md` |
 | Lista de músicas existentes (sem abrir cada uma) | `content/catalog.json` (gerado) |
-| Fonte de uma música | `content/songs/<slug>.tex` |
+| Fonte de uma música / JSON gerado | `content/songs/<id>.tex` / `content/build/<id>.json` |
 | Microfone, pitch, ataque, acordes (chroma) | `src/audio/index.ts` |
 | Modelo da música, nota↔MIDI↔corda/traste, importadores | `src/music/index.ts` |
 | Relógio, modos Espera/Play-along, pontuação | `src/engine/index.ts` |
 | Telas e componentes | `src/ui/index.ts` |
+| Desenho da tab (canvas, geometria, cores) | `src/ui/tab/draw.ts`, `src/ui/tab/TabCanvas.tsx` |
 | Persistência (IndexedDB) | `src/storage/index.ts` |
-| Entrada do app (render + CSS global) | `src/main.tsx`, `src/ui/styles.css` |
-| Scripts de build (ícones; alphaTex → JSON no M2) | `scripts/` |
+| Entrada do app e estilos (tokens + afinador / páginas) | `src/main.tsx`, `src/ui/styles.css`, `src/ui/pages.css` |
+| Scripts: conteúdo (alphaTex → JSON + catálogo), ícones | `scripts/build-content.mjs`, `scripts/gen-icons.mjs` |
 | Testes (Vitest) e áudios de teste (WAV) | `tests/`, `tests/fixtures/` |
 | Config: Vite + PWA (manifest), TypeScript | `vite.config.ts`, `tsconfig.json` |
 | Deploy (GitHub Pages via Actions) | `.github/workflows/deploy.yml` |
 | Ícones gerados | `public/icons/` (via `npm run icons`) |
 | Servidores para o painel de preview | `.claude/launch.json` (`dev`, `preview`) |
 
-Módulos de `src/` ainda vazios exportam `{}`; o comentário do `index.ts` diz em que marco ganham código.
+`src/storage` ainda exporta `{}`; o comentário de cada `index.ts` diz o que existe e em que marco entra o resto.
 
 ## Como ler o código sem gastar tokens
 
@@ -55,7 +56,7 @@ Slash (em `.claude/commands/`):
 - `/musica <nome>` — cria uma música/exercício no formato oficial.
 - `/bug <descrição>` — registra ou investiga um problema.
 
-Terminal (disponíveis a partir do M0): `npm run dev` · `npm run build` · `npm test`
+Terminal: `npm run dev` · `npm run build` · `npm test` · `npm run content` (regenera músicas; dev/build/test já rodam)
 
 ## Regra de manutenção (obrigatória ao fim de toda tarefa)
 

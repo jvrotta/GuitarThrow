@@ -22,6 +22,16 @@ export function TunerIcon() {
   );
 }
 
+export function MusicIcon() {
+  return (
+    <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+      <path d="M3 6h18M3 10h18M3 14h18M3 18h18" stroke-width="1.2" opacity="0.6" />
+      <circle cx="8" cy="10" r="2.6" fill="currentColor" stroke="none" />
+      <circle cx="15" cy="14" r="2.6" fill="currentColor" stroke="none" />
+    </svg>
+  );
+}
+
 export function LockIcon() {
   return (
     <svg class="lock" viewBox="0 0 24 24" aria-label="travada" fill="none" stroke="currentColor" stroke-width="2.2">

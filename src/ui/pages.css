@@ -1,0 +1,53 @@
+/* Library, song view and controls (M2). Tokens come from styles.css. */
+
+.hero-card.secondary { border-color: var(--line); background: var(--surface); box-shadow: none; }
+.hero-card.secondary .hero-icon { background: var(--surface-2); color: var(--accent); }
+
+.bar-meta { min-width: 44px; text-align: right; color: var(--muted); font-size: 0.85rem; font-variant-numeric: tabular-nums; }
+
+/* ---------- Library ---------- */
+.page { min-height: 100dvh; display: flex; flex-direction: column; gap: 16px; padding: 4px 16px 24px; }
+.lib-group h3 { margin: 4px 4px 8px; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); }
+.lib-item {
+  width: 100%; display: flex; align-items: center; gap: 12px; padding: 14px 16px; margin-bottom: 8px; text-align: left;
+  border: 1px solid transparent; border-radius: var(--radius); background: var(--surface);
+}
+.lib-item:active { border-color: var(--line); transform: scale(0.99); }
+.lib-main { flex: 1; display: grid; gap: 3px; min-width: 0; }
+.lib-main strong { font-size: 1.05rem; }
+.lib-main span { color: var(--muted); font-size: 0.82rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.level { display: flex; gap: 3px; }
+.level i { width: 6px; height: 14px; border-radius: 3px; background: var(--line); }
+.level i.on { background: var(--accent); }
+
+/* ---------- Song view ---------- */
+.song-screen { height: 100dvh; display: grid; grid-template-rows: auto 1fr auto; padding: 4px 8px 8px; }
+.song-screen .bar h2 { overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+.tab-area { position: relative; min-height: 0; display: grid; }
+.tab-canvas { width: 100%; height: 100%; min-height: 0; touch-action: none; display: block; }
+.rotate-hint {
+  display: none; position: absolute; left: 50%; top: calc(100% + 12px); transform: translateX(-50%); margin: 0;
+  padding: 6px 12px; border-radius: 999px; background: var(--surface); color: var(--muted); font-size: 0.8rem; white-space: nowrap;
+}
+@media (orientation: portrait) {
+  .rotate-hint { display: block; }
+  .tab-area { max-height: 380px; align-self: center; height: 100%; }
+}
+
+.controls { display: flex; align-items: center; gap: 12px; padding: 8px 4px 0; }
+.play-btn {
+  width: 56px; height: 56px; flex: none; border: 0; border-radius: 50%; background: var(--accent); color: #1a1205;
+  font-size: 1.3rem; display: grid; place-items: center; box-shadow: 0 6px 20px -6px #f5a52499;
+}
+.play-btn:disabled { opacity: 0.5; }
+.chips { display: flex; gap: 6px; flex: 1; }
+.chip { border: 1px solid var(--line); background: none; border-radius: 999px; padding: 8px 12px; min-height: 40px; color: var(--muted); font-variant-numeric: tabular-nums; }
+.chip.on { border-color: var(--accent); color: var(--accent); background: #f5a5241a; }
+.bar-count { color: var(--muted); font-variant-numeric: tabular-nums; min-width: 44px; text-align: right; }
+
+@media (orientation: landscape) and (max-height: 500px) {
+  .song-screen { grid-template-rows: auto 1fr auto; padding: 0 8px 4px; }
+  .song-screen .bar { height: 40px; }
+  .controls { padding-top: 2px; }
+  .play-btn { width: 48px; height: 48px; }
+}

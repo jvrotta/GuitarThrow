@@ -1,0 +1,42 @@
+[
+  {
+    "id": "cordas-soltas",
+    "kind": "exercise",
+    "level": 1,
+    "source": "Exercício original",
+    "title": "Cordas soltas",
+    "tempo": 70,
+    "notes": 13,
+    "bars": 4
+  },
+  {
+    "id": "cromatico-1234",
+    "kind": "exercise",
+    "level": 1,
+    "source": "Exercício original",
+    "title": "Cromático 1-2-3-4",
+    "tempo": 60,
+    "notes": 24,
+    "bars": 6
+  },
+  {
+    "id": "escala-do-maior",
+    "kind": "exercise",
+    "level": 2,
+    "source": "Exercício original",
+    "title": "Escala de Dó maior",
+    "tempo": 70,
+    "notes": 15,
+    "bars": 4
+  },
+  {
+    "id": "ode-a-alegria",
+    "kind": "song",
+    "level": 2,
+    "source": "Beethoven, 9ª Sinfonia (domínio público) — arranjo original da melodia",
+    "title": "Ode à Alegria",
+    "tempo": 100,
+    "notes": 30,
+    "bars": 8
+  }
+]

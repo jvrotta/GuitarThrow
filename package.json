@@ -4,10 +4,11 @@
   "version": "0.1.0",
   "type": "module",
   "scripts": {
-    "dev": "vite --host",
-    "build": "tsc --noEmit && vite build",
+    "dev": "npm run content && vite --host",
+    "build": "npm run content && tsc --noEmit && vite build",
     "preview": "vite preview --host",
-    "test": "vitest run",
+    "test": "npm run content && vitest run",
+    "content": "node scripts/build-content.mjs",
     "icons": "node scripts/gen-icons.mjs"
   },
   "dependencies": {
@@ -15,6 +16,7 @@
     "preact": "^11.2.0"
   },
   "devDependencies": {
+    "@coderline/alphatab": "^1.9.0",
     "@preact/preset-vite": "^2.10.6",
     "typescript": "^7.0.2",
     "vite": "^8.3.8",

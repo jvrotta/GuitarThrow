@@ -4,11 +4,9 @@
 
 ## Próximo passo
 
-1. **Usuário — testar o afinador redesenhado no iPhone** (reabrir o app até o rodapé mostrar a versão nova):
-   tocar em Afinador (já começa a ouvir), afinar as 6 cordas, testar a trava (tocar numa corda na tela) e girar o celular.
-   Relatar o que ainda estiver ruim de usar ou de ler.
-2. Opcional: gravar 5 s de cada corda (ícone de diagnóstico → Gravar → Salvar) e colocar os WAV em `tests/fixtures/`.
-3. M2 — tab rolando.
+1. **Usuário — testar o M2 no iPhone**: Início → Músicas → abrir um exercício; tocar ▶, mudar a velocidade,
+   arrastar a tab com o dedo, girar o celular. Relatar o que estiver ruim de ler (tamanho dos números, espaçamento, cores).
+2. M3 — Modo Espera com notas simples (detector de ataque + engine que só avança no acerto).
 
 ## Marcos
 
@@ -27,13 +25,15 @@
 - [x] Gravar 5 s no painel e salvar WAV (Compartilhar no iOS)
 - [x] Validação no iPhone: Mi grave estável (usuário, 2026-11-18)
 - [x] Redesenho após o teste: cordas em destaque, auto + trava, ✓ por corda, mic no toque, retrato/paisagem, home nova
-- [ ] Aprovação do redesenho no iPhone (usuário)
+- [x] Aprovação do redesenho no iPhone (usuário, 2026-11-18)
 
 ### M2 — Tab rolando
-- [ ] Modelo `Song`/`Event` + utilitários de nota
-- [ ] Script alphaTex → JSON + `content/catalog.json`
-- [ ] Render da tab em canvas (cursor fixo a 1/3)
-- [ ] 3 exercícios iniciais
+- [x] Modelo `Song`/`SongEvent` + conversor alphaTab → Song (reusável no M6) + `Transport` (engine)
+- [x] Script alphaTex → JSON + `content/catalog.json` (roda no dev/build/test; CI em Node 24)
+- [x] Render da tab em canvas (cursor fixo a 1/3, sustentação, compassos, HiDPI) + arrastar para navegar
+- [x] Telas Músicas (biblioteca) e Visualizar (▶/pausa, 50/75/100%, contador de compassos, aviso para girar)
+- [x] 3 exercícios + Ode à Alegria (domínio público)
+- [ ] Teste no iPhone (usuário)
 
 ### M3 — Modo Espera: notas simples
 - [ ] Detector de ataque (onset)
@@ -57,13 +57,14 @@
 - Atualização do PWA: quem já tinha o app aberto pode ver a versão antiga na 1ª abertura após o deploy;
   a nova aparece ao reabrir (conferir pelo número de versão no rodapé).
 - Ao voltar do segundo plano o microfone é desligado de propósito; o usuário toca "Ativar" de novo.
-- iOS ignora `orientation` do manifest: telas de prática precisarão de aviso "gire o celular" (M2).
+- iOS ignora `orientation` do manifest: a tela da música mostra "Gire o celular" em retrato.
 - `npm audit` acusa ReDoS em `picomatch`/`minimatch`/`glob` via vite/vitest/vite-plugin-pwa: só ferramentas de build,
   nada vai para o app publicado. Reavaliar ao atualizar dependências.
 - No Git Bash do Windows, `BASE_PATH=/x/` é convertido em caminho Windows; use `MSYS_NO_PATHCONV=1` para testar localmente.
 
 ## Histórico (1 linha por tarefa, mais recente no topo)
 
+- 2026-11-18 — M2: modelo Song, pipeline alphaTex→JSON, biblioteca, tab em canvas com transporte; verificado em retrato/paisagem.
 - 2026-11-18 — Afinador redesenhado (feedback: passos demais, leitura difícil, layout, visual); verificado em 390×844 e 844×390 com som simulado.
 - 2026-11-18 — M1: afinador + painel de debug + gravação WAV; verificado no navegador com som simulado (A2 +7 cents, E2 afinado, ~90 frames/s).
 - 2026-11-17 — Remoto `origin` configurado, push da `main`, primeiro deploy no Pages verificado (versão 1f2780a).

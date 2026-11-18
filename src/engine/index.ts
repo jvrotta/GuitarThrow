@@ -1,7 +1,6 @@
 /**
  * engine — practice logic, independent of UI.
- * Transport clock (AudioContext.currentTime), Wait mode (advance only on a correct hit),
- * Play-along mode (fixed tempo) and per-note scoring.
- * Planned: M3 (Wait, single notes), M4 (Wait, chords), M5 (Play-along).
+ * Transport: musical clock in beats (play/pause/seek/speed, injectable time source).
+ * Planned: Wait mode (M3 single notes, M4 chords), Play-along + scoring (M5).
  */
-export {};
+export { Transport } from './transport';

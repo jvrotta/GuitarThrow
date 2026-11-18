@@ -1,7 +1,7 @@
 /**
- * ui — screens and components (Preact). Interface text in pt-BR. Styles: styles.css (tokens on :root).
- * App.tsx owns the mic (usePitch) and starts it inside the tap that opens a screen (iOS gesture rule).
- * Home.tsx; Tuner.tsx (readout + StringRows.tsx, auto string detection, tap a string to lock);
- * DebugPanel.tsx (bottom sheet); icons.tsx (inline SVG); wakeLock.ts. Planned: Practice/tab canvas (M2+).
+ * ui — screens and components (Preact). Interface text in pt-BR. Styles: styles.css (tokens, tuner), pages.css.
+ * App.tsx: screen switch; owns the mic (usePitch) and starts it inside the tap that opens the tuner (iOS rule).
+ * Home.tsx · Tuner.tsx + StringRows.tsx · DebugPanel.tsx · Library.tsx (catalog) · SongView.tsx (tab + transport).
+ * tab/draw.ts: canvas tab drawing + geometry; tab/TabCanvas.tsx: HiDPI canvas, rAF loop, drag-to-scrub.
  */
 export { App } from './App';
