@@ -2,7 +2,8 @@ import { useEffect, useRef, useState } from 'preact/hooks';
 import { IN_TUNE_CENTS as IN_TUNE, readTuning, stringLabels, type TuningReading } from '../music';
 import { DebugPanel } from './DebugPanel';
 import { GaugeIcon } from './icons';
-import { StringRows } from './StringRows';
+import { Gauge } from './tuner/Gauge';
+import { Headstock } from './tuner/Headstock';
 import type { PitchState } from './usePitch';
 
 /** Keeps the last reading on screen for a moment after the sound fades. */
@@ -29,10 +30,11 @@ export function Tuner({ p, onBack }: { p: PitchState; onBack: () => void }) {
     last.current = { r: { ...live, cents }, at: now };
   }
   const shown = last.current && now - last.current.at < HOLD_MS ? last.current.r : null;
+  const ok = shown !== null && Math.abs(shown.cents) < IN_TUNE;
 
   // Check mark once a string stays in tune long enough.
   useEffect(() => {
-    if (!live || Math.abs(shown?.cents ?? 99) >= IN_TUNE) {
+    if (!live || !ok) {
       inTuneSince.current = null;
       return;
     }
@@ -41,26 +43,47 @@ export function Tuner({ p, onBack }: { p: PitchState; onBack: () => void }) {
     else if (now - t.at > CONFIRM_MS && !done.has(live.string)) setDone(new Set(done).add(live.string));
   });
 
-  const toggleLock = (s: number) => setLocked(locked === s ? null : s);
-  const running = p.status === 'running';
+  const target = shown?.string ?? locked;
 
   return (
     <main class="tuner-screen">
       <header class="bar">
         <button class="icon-btn" onClick={onBack} aria-label="Voltar">‹</button>
         <h2>Afinador</h2>
-        <button class={`icon-btn ${debug ? 'on' : ''}`} onClick={() => setDebug(!debug)} aria-label="Diagnóstico">
-          <GaugeIcon />
-        </button>
+        <div class="bar-actions">
+          <button
+            class={`auto-chip ${locked === null ? 'on' : ''}`}
+            onClick={() => setLocked(null)}
+            aria-pressed={locked === null}
+          >
+            Auto
+          </button>
+          <button class={`icon-btn ${debug ? 'on' : ''}`} onClick={() => setDebug(!debug)} aria-label="Diagnóstico">
+            <GaugeIcon />
+          </button>
+        </div>
       </header>
 
-      <section class={`readout ${live ? '' : 'faded'}`}>
-        <Readout r={shown} locked={locked} />
+      <section class={`t-top ${live ? '' : 'faded'}`}>
+        <Gauge cents={shown?.cents ?? null} stale={!live} />
+        <div class={`big-note ${ok ? 'ok' : ''} ${target ? '' : 'idle'}`}>{target ? LABELS[target - 1] : '—'}</div>
+        <div class={`verdict ${shown ? (ok ? 'ok' : Math.abs(shown.cents) > 25 ? 'far' : 'near') : 'muted'}`}>
+          {verdict(shown, locked)}
+        </div>
       </section>
 
-      <StringRows labels={LABELS} reading={shown} live={live !== null} locked={locked} done={done} onToggle={toggleLock} />
+      <section class="t-head">
+        <Headstock
+          labels={LABELS}
+          active={shown?.string ?? null}
+          activeOk={ok}
+          locked={locked}
+          done={done}
+          onPick={(s) => setLocked(locked === s ? null : s)}
+        />
+      </section>
 
-      {!running && (
+      {p.status !== 'running' && (
         <button class="overlay" onClick={p.start} disabled={p.status === 'starting'}>
           <strong>
             {p.status === 'starting' ? 'Abrindo microfone…' : p.status === 'error' ? 'Tentar de novo' : 'Toque para ouvir'}
@@ -82,31 +105,10 @@ export function Tuner({ p, onBack }: { p: PitchState; onBack: () => void }) {
   );
 }
 
-function Readout({ r, locked }: { r: TuningReading | null; locked: number | null }) {
-  if (!r) {
-    return (
-      <>
-        <div class="big-note idle">{locked ? LABELS[locked - 1] : '—'}</div>
-        <div class="verdict muted">{locked ? `${locked}ª corda travada · toque a corda` : 'Toque uma corda solta'}</div>
-      </>
-    );
-  }
+function verdict(r: TuningReading | null, locked: number | null): string {
+  if (!r) return locked ? `${locked}ª corda travada · toque essa corda` : 'Toque uma corda solta';
   const c = Math.round(r.cents);
-  const ok = Math.abs(r.cents) < IN_TUNE;
-  return (
-    <>
-      <div class={`big-note ${ok ? 'ok' : ''}`}>{LABELS[r.string - 1]}</div>
-      <div class={`verdict ${ok ? 'ok' : Math.abs(c) > 25 ? 'far' : 'near'}`}>
-        {ok
-          ? '✓ Afinada'
-          : Math.abs(c) >= 100
-            ? c < 0
-              ? '▲ Muito grave · suba'
-              : '▼ Muito aguda · desça'
-            : c < 0
-              ? `▲ Suba · ${c}`
-              : `▼ Desça · +${c}`}
-      </div>
-    </>
-  );
+  if (Math.abs(r.cents) < IN_TUNE) return '✓ Afinada';
+  if (Math.abs(c) >= 100) return c < 0 ? '▲ Muito grave · aperte a tarraxa' : '▼ Muito aguda · afrouxe a tarraxa';
+  return c < 0 ? '▲ Aperte um pouco' : '▼ Afrouxe um pouco';
 }

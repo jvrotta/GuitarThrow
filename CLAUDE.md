@@ -25,7 +25,8 @@ Marco atual: **M2 — tab rolando pronta; aguardando teste no iPhone**. No ar: h
 | Telas e componentes | `src/ui/index.ts` |
 | Desenho da tab (canvas, geometria, cores) | `src/ui/tab/draw.ts`, `src/ui/tab/TabCanvas.tsx` |
 | Persistência (IndexedDB) | `src/storage/index.ts` |
-| Entrada do app e estilos (tokens + afinador / páginas) | `src/main.tsx`, `src/ui/styles.css`, `src/ui/pages.css` |
+| Entrada do app e estilos (tokens / páginas / afinador) | `src/main.tsx`, `src/ui/styles.css`, `src/ui/pages.css`, `src/ui/tuner/tuner.css` |
+| Afinador: cabeça do violão (SVG) e medidor | `src/ui/tuner/Headstock.tsx`, `src/ui/tuner/Gauge.tsx` |
 | Scripts: conteúdo (alphaTex → JSON + catálogo), ícones | `scripts/build-content.mjs`, `scripts/gen-icons.mjs` |
 | Testes (Vitest) e áudios de teste (WAV) | `tests/`, `tests/fixtures/` |
 | Config: Vite + PWA (manifest), TypeScript | `vite.config.ts`, `tsconfig.json` |

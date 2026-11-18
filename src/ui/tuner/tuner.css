@@ -1,0 +1,79 @@
+/* Tuner screen: gauge + note on top, headstock below (portrait) or side by side (landscape). */
+
+.tuner-screen {
+  position: relative; height: 100dvh; overflow: hidden;
+  display: grid; grid-template-rows: auto auto minmax(0, 1fr); gap: 4px; padding: 4px 12px 12px;
+  grid-template-areas: 'bar' 'top' 'head';
+}
+.tuner-screen .bar { grid-area: bar; }
+.bar-actions { display: flex; align-items: center; gap: 4px; }
+.auto-chip {
+  border: 1px solid var(--line); background: none; border-radius: 999px; padding: 6px 12px; min-height: 36px;
+  color: var(--muted); font-weight: 600; font-size: 0.85rem;
+}
+.auto-chip.on { border-color: var(--ok); color: var(--ok); background: #3dd68c14; }
+
+.t-top { grid-area: top; display: grid; justify-items: center; gap: 2px; padding-top: 4px; transition: opacity 0.3s; }
+.t-top.faded .g-needle, .t-top.faded .big-note { opacity: 0.45; }
+.big-note { font-size: clamp(3.2rem, 15vmin, 5.5rem); font-weight: 800; letter-spacing: -0.03em; line-height: 1.05; transition: color 0.2s; }
+.big-note.idle { color: var(--line); }
+.verdict { font-size: 1.1rem; font-weight: 600; min-height: 1.5em; text-align: center; }
+
+/* The SVG fills this box; its viewBox keeps the aspect ratio (scaled to fit, centered). */
+.t-head { grid-area: head; min-height: 0; overflow: hidden; }
+
+/* ---------- Gauge ---------- */
+.gauge { position: relative; width: min(100%, 520px); height: 92px; padding: 0 28px; }
+.g-flat, .g-sharp { position: absolute; top: 30px; font-size: 1.5rem; font-weight: 700; color: var(--muted); }
+.g-flat { left: 2px; }
+.g-sharp { right: 2px; }
+.gauge.flat .g-flat, .gauge.sharp .g-sharp { color: inherit; }
+.g-scale { position: relative; height: 100%; }
+.g-scale i { position: absolute; bottom: 10px; width: 2px; height: 14px; margin-left: -1px; background: var(--line); border-radius: 1px; }
+.g-scale i.major { height: 22px; background: var(--muted); }
+.g-scale i.center { height: 34px; width: 3px; margin-left: -1.5px; background: var(--ok); }
+.g-zone { position: absolute; left: 45%; width: 10%; bottom: 6px; height: 40px; border-radius: 8px; background: #3dd68c1a; border: 1px solid #3dd68c40; }
+.g-needle {
+  position: absolute; top: 0; bottom: 6px; width: 4px; margin-left: -2px; border-radius: 2px;
+  background: currentColor; box-shadow: 0 0 12px currentColor; transition: left 80ms linear;
+}
+/* Head pill: background follows the gauge color; text is painted dark on top of it. */
+.g-head {
+  position: absolute; top: 0; left: 50%; transform: translateX(-50%); min-width: 40px; height: 32px; padding: 0 8px;
+  display: grid; place-items: center; border-radius: 16px; background: currentColor; box-shadow: 0 4px 14px -4px currentColor;
+  font-weight: 800; font-size: 0.95rem; font-variant-numeric: tabular-nums; -webkit-text-fill-color: #111318;
+}
+.gauge.ok { color: var(--ok); }
+.gauge.near { color: var(--near); }
+.gauge.far { color: var(--far); }
+.gauge.stale .g-needle { opacity: 0.45; }
+
+/* ---------- Headstock ---------- */
+.headstock { display: block; width: 100%; height: 100%; overflow: visible; }
+.hs-head { stroke: #00000060; stroke-width: 1; }
+.hs-board { fill: #1b1310; }
+.hs-nut { fill: #e9e2d0; }
+.hs-key rect { fill: #9aa1ad; }
+.hs-key ellipse { fill: #c9ced8; stroke: #6b7280; stroke-width: 1; }
+.hs-key.active ellipse { fill: var(--accent); stroke: #fff6; }
+.hs-key.ok ellipse { fill: var(--ok); stroke: #fff6; }
+.hs-string { fill: none; stroke: #d7dbe3; opacity: 0.7; stroke-linejoin: round; }
+.hs-string.active { stroke: var(--accent); opacity: 1; filter: drop-shadow(0 0 3px var(--accent)); }
+.hs-string.ok { stroke: var(--ok); opacity: 1; filter: drop-shadow(0 0 3px var(--ok)); }
+.hs-post { fill: #e3e6ec; stroke: #7b8190; stroke-width: 1.5; }
+.hs-label { cursor: pointer; }
+.hs-label circle { fill: var(--surface-2); stroke: var(--line); stroke-width: 1.5; transition: fill 0.2s; }
+.hs-label text { fill: var(--text); font-weight: 700; font-size: 15px; text-anchor: middle; dominant-baseline: middle; pointer-events: none; }
+.hs-label .hs-num { fill: var(--muted); font-size: 10px; font-weight: 600; }
+.hs-label.active circle { fill: var(--accent); stroke: var(--accent); }
+.hs-label.active text:not(.hs-num) { fill: #1a1205; }
+.hs-label.ok circle { fill: var(--ok); stroke: var(--ok); }
+.hs-label.ok text:not(.hs-num) { fill: #062312; }
+.hs-label.locked circle { stroke: var(--accent); stroke-width: 3; stroke-dasharray: 4 3; }
+.hs-done circle { fill: var(--ok); stroke: var(--bg); stroke-width: 2; }
+.hs-done path { fill: none; stroke: #062312; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+
+@media (orientation: landscape) and (max-height: 500px) {
+  .tuner-screen { grid-template-columns: 1fr 1fr; grid-template-rows: auto minmax(0, 1fr); grid-template-areas: 'bar head' 'top head'; padding: 4px 8px 8px; }
+  .t-top { align-content: center; }
+}

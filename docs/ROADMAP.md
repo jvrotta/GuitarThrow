@@ -4,7 +4,7 @@
 
 ## Próximo passo
 
-1. **Usuário — testar o M2 no iPhone**: Início → Músicas → abrir um exercício; tocar ▶, mudar a velocidade,
+1. **Usuário — testar no iPhone** o afinador novo (cabeça do violão + ponteiro) e o **M2**: Início → Músicas → abrir um exercício; tocar ▶, mudar a velocidade,
    arrastar a tab com o dedo, girar o celular. Relatar o que estiver ruim de ler (tamanho dos números, espaçamento, cores).
 2. M3 — Modo Espera com notas simples (detector de ataque + engine que só avança no acerto).
 
@@ -64,6 +64,7 @@
 
 ## Histórico (1 linha por tarefa, mais recente no topo)
 
+- 2026-11-18 — Afinador refeito com cabeça do violão 3+3 e medidor de ponteiro (feedback: pouco intuitivo); verificado em retrato/paisagem.
 - 2026-11-18 — M2: modelo Song, pipeline alphaTex→JSON, biblioteca, tab em canvas com transporte; verificado em retrato/paisagem.
 - 2026-11-18 — Afinador redesenhado (feedback: passos demais, leitura difícil, layout, visual); verificado em 390×844 e 844×390 com som simulado.
 - 2026-11-18 — M1: afinador + painel de debug + gravação WAV; verificado no navegador com som simulado (A2 +7 cents, E2 afinado, ~90 frames/s).
