@@ -45,12 +45,14 @@ Para saber o que já existe, leia o **catálogo**, não os `.tex`. O id é o nom
 - Cada nota precisa de **ataque próprio** (palhetada): sem hammer-on, pull-off, slide nem bend.
 - Evitar o **mesmo acorde batido várias vezes seguidas** em colcheias e a mesma nota grave repetida enquanto soa:
   o "som novo" fica pequeno e o juiz às vezes perde (ver ROADMAP). Alternar acordes ou "chug" na corda solta funciona.
-- Toda peça nova de `content/build/rock-*.json` passa por `tests/rock-songs.test.ts`: uma execução sintética no
-  tempo precisa ter ≥ 95 % das notas reconhecidas no Play-along. Para outra estante, estender o teste.
+- Notas graves (cordas Mi e Lá) precisam de **≥ ~270 ms** (colcheia até ~110 bpm); semicolcheia grave não é medida.
+- Toda peça nova de `content/build/rock-*.json` e `metal-*.json` passa por `tests/rock-songs.test.ts`: uma execução
+  sintética no tempo precisa ter ≥ 95 % das notas reconhecidas no Play-along. Para outra estante, estender o teste.
 
 ## Biblioteca atual
 
 Ver `content/catalog.json`. Níveis: 1 = primeiras aulas (cordas soltas, 4 dedos), 2 = primeira posição com melodia
 ou power chords móveis, 3 = riffs com troca de posição / pentatônica, 4–5 = pestana, arpejos, solo pelo braço.
 Na biblioteca, uma estante de estilo (`@genre`) agrupa: Iniciante = 1–2, Médio = 3, Avançado = 4–5.
-**Rock**: só composições originais no estilo (riffs, power chords, pentatônica); rock famoso é protegido — o usuário importa.
+**Rock** e **Metal**: só composições originais no estilo (riffs, power chords, galope, trítono, pentatônica, menor
+harmônica); músicas de bandas (Metallica etc.) são protegidas — o usuário importa o próprio arquivo .gp.

@@ -30,6 +30,17 @@
     "bars": 6
   },
   {
+    "id": "metal-peso-na-sexta",
+    "kind": "song",
+    "level": 1,
+    "source": "Composição original (estilo heavy metal)",
+    "title": "Peso na Sexta",
+    "tempo": 80,
+    "genre": "metal",
+    "notes": 43,
+    "bars": 8
+  },
+  {
     "id": "rock-power-chords-mi-la-re",
     "kind": "song",
     "level": 1,
@@ -62,6 +73,17 @@
     "bars": 6
   },
   {
+    "id": "rock-boogie-de-la",
+    "kind": "song",
+    "level": 2,
+    "source": "Composição original (estilo rock clássico)",
+    "title": "Boogie de Lá",
+    "tempo": 100,
+    "genre": "rock",
+    "notes": 97,
+    "bars": 13
+  },
+  {
     "id": "escala-do-maior",
     "kind": "exercise",
     "level": 2,
@@ -70,6 +92,17 @@
     "tempo": 70,
     "notes": 15,
     "bars": 4
+  },
+  {
+    "id": "metal-galope",
+    "kind": "song",
+    "level": 2,
+    "source": "Composição original (estilo heavy metal)",
+    "title": "Galope",
+    "tempo": 70,
+    "genre": "metal",
+    "notes": 49,
+    "bars": 7
   },
   {
     "id": "rock-garagem",
@@ -93,6 +126,17 @@
     "bars": 8
   },
   {
+    "id": "metal-balada-limpa",
+    "kind": "song",
+    "level": 3,
+    "source": "Composição original (estilo balada de metal)",
+    "title": "Balada Limpa",
+    "tempo": 70,
+    "genre": "metal",
+    "notes": 57,
+    "bars": 8
+  },
+  {
     "id": "rock-estrada",
     "kind": "song",
     "level": 3,
@@ -101,6 +145,17 @@
     "tempo": 95,
     "genre": "rock",
     "notes": 41,
+    "bars": 8
+  },
+  {
+    "id": "rock-hino-de-arena",
+    "kind": "song",
+    "level": 3,
+    "source": "Composição original (estilo hard rock)",
+    "title": "Hino de Arena",
+    "tempo": 100,
+    "genre": "rock",
+    "notes": 30,
     "bars": 8
   },
   {
@@ -125,6 +180,17 @@
     "bars": 5
   },
   {
+    "id": "metal-tritono",
+    "kind": "song",
+    "level": 3,
+    "source": "Composição original (estilo heavy metal)",
+    "title": "Trítono",
+    "tempo": 90,
+    "genre": "metal",
+    "notes": 37,
+    "bars": 7
+  },
+  {
     "id": "rock-arpejo-eletrico",
     "kind": "song",
     "level": 4,
@@ -134,6 +200,28 @@
     "genre": "rock",
     "notes": 57,
     "bars": 8
+  },
+  {
+    "id": "metal-motor-thrash",
+    "kind": "song",
+    "level": 4,
+    "source": "Composição original (estilo thrash metal)",
+    "title": "Motor Thrash",
+    "tempo": 110,
+    "genre": "metal",
+    "notes": 43,
+    "bars": 7
+  },
+  {
+    "id": "metal-solo-harmonico",
+    "kind": "song",
+    "level": 5,
+    "source": "Composição original (estilo heavy metal)",
+    "title": "Solo Harmônico",
+    "tempo": 72,
+    "genre": "metal",
+    "notes": 71,
+    "bars": 7
   },
   {
     "id": "rock-solo-na-estrada",

@@ -8,7 +8,7 @@ em dois modos: **Espera** (só avança ao acertar) e **Play-along** (no andament
 
 ## Estado atual
 
-Marco atual: **M4 + M5 + M6 (parcial) prontos sem violão — acordes, Play-along, calibração, Ajustes, progresso, importação, estante Rock por nível; aguardando o teste completo no iPhone**. No ar: https://jvrotta.github.io/GuitarThrow/
+Marco atual: **M4 + M5 + M6 (parcial) prontos sem violão — acordes, Play-along, calibração, Ajustes, progresso, importação, estantes Rock e Metal por nível; aguardando o teste completo no iPhone**. No ar: https://jvrotta.github.io/GuitarThrow/
 
 ## Mapa — "preciso de X → abro Y"
 

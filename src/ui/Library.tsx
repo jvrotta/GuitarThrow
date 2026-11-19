@@ -9,7 +9,10 @@ const GROUPS: { kind: CatalogEntry['kind']; title: string }[] = [
 ];
 
 /** Style shelves, split by level band. */
-const GENRES: { genre: string; title: string }[] = [{ genre: 'rock', title: 'Rock' }];
+const GENRES: { genre: string; title: string }[] = [
+  { genre: 'rock', title: 'Rock' },
+  { genre: 'metal', title: 'Metal' },
+];
 const BANDS: { title: string; has: (level: number) => boolean }[] = [
   { title: 'Iniciante', has: (l) => l <= 2 },
   { title: 'Médio', has: (l) => l === 3 },
