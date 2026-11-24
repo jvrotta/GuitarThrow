@@ -14,6 +14,7 @@
    - Rock: "Power Chords: E5, A5, D5" e "Garagem" (Espera e Play-along); se puder, gravar 5 s de um power chord
      batido em colcheias e de um Lá grave repetido (casos fracos do juiz, ver Problemas conhecidos).
    - Metal: "Peso na Sexta" e "Motor Thrash" (Mi grave solto rápido: o caso mais difícil para o juiz).
+   - Tradicionais: "Jingle Bells" (muitas notas repetidas: Mi Mi Mi, Fá Fá Fá) e "Greensleeves" (3/4, Play-along).
    Se algo falhar: gravar 5 s no painel de debug do afinador e mandar o WAV (vira fixture em `tests/fixtures/`).
 2. Ajustar o que o teste mostrar; depois ampliar a biblioteca de domínio público (M6).
 
@@ -69,7 +70,8 @@
 ### M6 — Conteúdo e progresso
 - [x] Estante Rock (7 peças originais: Iniciante 3, Médio 2, Avançado 2) + teste que "toca" cada uma com áudio sintético
 - [x] Rock +2 (Boogie de Lá, Hino de Arena) e estante Metal (6 peças originais: galope, trítono, balada limpa, thrash, solo)
-- [ ] Biblioteca de domínio público ampliada; outras estantes (blues, MPB/folk tradicional…)
+- [x] Estante "Tradicionais e clássicas": 8 músicas completas de domínio público (níveis 1–4), Ode à Alegria completada
+- [ ] Outras estantes (blues, cantigas brasileiras de domínio público, violão clássico)
 - [x] Importadores: tab em texto (parser próprio), Guitar Pro / MusicXML (alphaTab sob demanda); apagar importada
 - [x] Progresso por música (melhor por modo, estrelas na biblioteca), "Continuar", tela Ajustes
 
@@ -93,6 +95,7 @@
 
 ## Histórico (1 linha por tarefa, mais recente no topo)
 
+- 2026-11-24 — Estante "Tradicionais e clássicas" (8 músicas completas de domínio público); teste de execução agora cobre toda música; corrigidos 2 bugs do teste (contagem fixa em 4 tempos, notas mudas após 60 s); 113 testes.
 - 2026-11-18 — Estante Metal (6 peças originais no estilo; Metallica é protegido — importar .gp) + 2 de rock; achado: Mi grave em semicolcheia curto demais para o juiz; 104 testes.
 - 2026-11-18 — Estante Rock por nível (7 peças originais) + teste de "execução" sintética de cada peça; corrigido o rastreador de acordes que zerava no Play-along ao mudar os candidatos; 95 testes.
 - 2026-11-18 — M4/M5/M6 sem violão: acordes no modo Espera, Play-along (Perfeito/Bom, metrônomo, contagem, loop A–B), calibração, Ajustes, progresso + "Continuar", importação (texto, GP/MusicXML sob demanda); 87 testes; verificado no navegador com som simulado.

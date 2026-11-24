@@ -2,12 +2,12 @@ import { describe, expect, it } from 'vitest';
 import type { Song } from '../src/music';
 import { perform, playAlong } from './perform';
 
-const shelves = Object.values(
-  import.meta.glob<Song>(['../content/build/rock-*.json', '../content/build/metal-*.json'], { eager: true, import: 'default' }),
+const shelves = Object.values(import.meta.glob<Song>('../content/build/*.json', { eager: true, import: 'default' })).filter(
+  (s) => s.kind === 'song',
 );
 
 /**
- * Every rock and metal piece must be playable as written: a clean, on-time performance (synthetic, phone-mic
+ * Every song (all shelves) must be playable as written: a clean, on-time performance (synthetic, phone-mic
  * colored) is heard note by note in Play-along. Play-along covers recognition of every event; Wait mode
  * on fixed audio would cascade after one miss (a real player plays the note again).
  * Known gap (ROADMAP): a low note or power chord struck again while it still rings can be missed
@@ -22,7 +22,7 @@ describe.each(shelves)('$id', (song) => {
   });
 });
 
-it.each(['rock', 'metal'])('has %s pieces at every level band', (genre) => {
+it.each(['rock', 'metal', 'tradicional'])('has %s pieces at every level band', (genre) => {
   const levels = shelves.filter((s) => s.genre === genre).map((s) => s.level);
   expect(levels.some((l) => l <= 2) && levels.some((l) => l === 3) && levels.some((l) => l >= 4)).toBe(true);
 });

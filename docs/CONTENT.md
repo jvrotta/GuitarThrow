@@ -46,8 +46,8 @@ Para saber o que já existe, leia o **catálogo**, não os `.tex`. O id é o nom
 - Evitar o **mesmo acorde batido várias vezes seguidas** em colcheias e a mesma nota grave repetida enquanto soa:
   o "som novo" fica pequeno e o juiz às vezes perde (ver ROADMAP). Alternar acordes ou "chug" na corda solta funciona.
 - Notas graves (cordas Mi e Lá) precisam de **≥ ~270 ms** (colcheia até ~110 bpm); semicolcheia grave não é medida.
-- Toda peça nova de `content/build/rock-*.json` e `metal-*.json` passa por `tests/rock-songs.test.ts`: uma execução
-  sintética no tempo precisa ter ≥ 95 % das notas reconhecidas no Play-along. Para outra estante, estender o teste.
+- Toda música (`@kind song`) passa por `tests/playable-songs.test.ts`: uma execução sintética no tempo precisa ter
+  ≥ 95 % das notas reconhecidas no Play-along. Uma estante nova entra na lista de faixas de nível do mesmo teste.
 
 ## Biblioteca atual
 
@@ -56,3 +56,6 @@ ou power chords móveis, 3 = riffs com troca de posição / pentatônica, 4–5 
 Na biblioteca, uma estante de estilo (`@genre`) agrupa: Iniciante = 1–2, Médio = 3, Avançado = 4–5.
 **Rock** e **Metal**: só composições originais no estilo (riffs, power chords, galope, trítono, pentatônica, menor
 harmônica); músicas de bandas (Metallica etc.) são protegidas — o usuário importa o próprio arquivo .gp.
+**Tradicionais e clássicas** (`@genre tradicional`): melodias de domínio público **completas** (toda a canção,
+estrofe e refrão; as repetições do original não são escritas), com a cifra acima da tab, em primeira posição sempre
+que possível (oitava abaixo do canto, se preciso). Parabéns: só a melodia (a letra em português ainda é protegida).

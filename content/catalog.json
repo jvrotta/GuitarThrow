@@ -10,6 +10,17 @@
     "bars": 7
   },
   {
+    "id": "brilha-brilha-estrelinha",
+    "kind": "song",
+    "level": 1,
+    "source": "Tradicional (melodia francesa do séc. XVIII, domínio público) — arranjo original",
+    "title": "Brilha, Brilha, Estrelinha",
+    "tempo": 90,
+    "genre": "tradicional",
+    "notes": 42,
+    "bars": 12
+  },
+  {
     "id": "cordas-soltas",
     "kind": "exercise",
     "level": 1,
@@ -28,6 +39,17 @@
     "tempo": 60,
     "notes": 24,
     "bars": 6
+  },
+  {
+    "id": "parabens-pra-voce",
+    "kind": "song",
+    "level": 1,
+    "source": "Melodia \"Good Morning to All\" (Hill, 1893; domínio público) — arranjo original, sem letra",
+    "title": "Parabéns pra Você",
+    "tempo": 100,
+    "genre": "tradicional",
+    "notes": 25,
+    "bars": 9
   },
   {
     "id": "metal-peso-na-sexta",
@@ -61,6 +83,17 @@
     "genre": "rock",
     "notes": 30,
     "bars": 8
+  },
+  {
+    "id": "when-the-saints",
+    "kind": "song",
+    "level": 1,
+    "source": "Spiritual tradicional (domínio público) — arranjo original",
+    "title": "When the Saints Go Marching In",
+    "tempo": 110,
+    "genre": "tradicional",
+    "notes": 32,
+    "bars": 16
   },
   {
     "id": "acordes-sol-do-re",
@@ -116,14 +149,37 @@
     "bars": 8
   },
   {
+    "id": "jingle-bells",
+    "kind": "song",
+    "level": 2,
+    "source": "James Lord Pierpont, 1857 (domínio público) — arranjo original",
+    "title": "Jingle Bells",
+    "tempo": 110,
+    "genre": "tradicional",
+    "notes": 97,
+    "bars": 32
+  },
+  {
+    "id": "noite-feliz",
+    "kind": "song",
+    "level": 2,
+    "source": "Franz Gruber, 1818 (domínio público) — arranjo original",
+    "title": "Noite Feliz",
+    "tempo": 80,
+    "genre": "tradicional",
+    "notes": 46,
+    "bars": 23
+  },
+  {
     "id": "ode-a-alegria",
     "kind": "song",
     "level": 2,
     "source": "Beethoven, 9ª Sinfonia (domínio público) — arranjo original da melodia",
     "title": "Ode à Alegria",
     "tempo": 100,
-    "notes": 30,
-    "bars": 8
+    "genre": "tradicional",
+    "notes": 62,
+    "bars": 16
   },
   {
     "id": "metal-balada-limpa",
@@ -146,6 +202,17 @@
     "genre": "rock",
     "notes": 41,
     "bars": 8
+  },
+  {
+    "id": "greensleeves",
+    "kind": "song",
+    "level": 3,
+    "source": "Tradicional inglesa, séc. XVI (domínio público) — arranjo original",
+    "title": "Greensleeves",
+    "tempo": 80,
+    "genre": "tradicional",
+    "notes": 70,
+    "bars": 31
   },
   {
     "id": "rock-hino-de-arena",
@@ -200,6 +267,17 @@
     "genre": "rock",
     "notes": 57,
     "bars": 8
+  },
+  {
+    "id": "minueto-em-sol",
+    "kind": "song",
+    "level": 4,
+    "source": "Christian Petzold, c. 1725 — \"Minueto em Sol\", BWV Anh. 114 (domínio público) — arranjo original",
+    "title": "Minueto em Sol",
+    "tempo": 100,
+    "genre": "tradicional",
+    "notes": 126,
+    "bars": 32
   },
   {
     "id": "metal-motor-thrash",

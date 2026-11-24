@@ -33,7 +33,7 @@ export function pluck(out: Float32Array, midi: number, start: number, o: PluckOp
   const C = (1 - (delay - N)) / (1 + (delay - N)); // allpass for the fractional part
   const rho = 10 ** (-3 / (f * t60));
   const i0 = Math.round(start * SR);
-  const len = Math.min(out.length - i0, Math.round((Math.min(end, 60) - start) * SR));
+  const len = Math.min(out.length - i0, Math.round((Math.min(end, start + 60) - start) * SR));
   if (len <= 0) return;
   const r = rng(midi * 131 + i0);
   const exc = new Float32Array(N);

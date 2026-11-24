@@ -9,7 +9,7 @@ import { phoneMic, pluck, roomNoise, silence, SR } from './synth';
  */
 export function perform(song: Song): Float32Array {
   const spb = 60 / song.tempo;
-  const count = 4 * spb;
+  const count = ((song.timeSig[0] * 4) / song.timeSig[1]) * spb; // 1-bar count-in, as the session does
   const x = silence(count + song.length * spb + 1.5);
   const at = (beat: number) => count + beat * spb;
   const next = (i: number, string: number) => {
